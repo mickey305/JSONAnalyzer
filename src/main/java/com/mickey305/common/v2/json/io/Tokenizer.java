@@ -115,21 +115,13 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
             token = this.createFigureToken();
         } else if(Character.isLetter(ch)) {
             // Letter: JSONNullValue or JSONBooleanValue
-            try {
-                token = this.createEspecialToken();
-            } catch (JSONTokenTypeException e) {
-                e.printStackTrace();
-            }
+            token = this.createEspecialToken();
         } else {
             // Other: Symbol, JSONField or JSONStringValue
             this.chgInnerJSONArrayStack();
             if (TokenUtil.isSymbol(ch)) {
                 // JSON symbol
-                try {
-                    token = new Token(line.next());
-                } catch (JSONTokenTypeException e) {
-                    e.printStackTrace();
-                }
+                token = new Token(line.next());
             } else if(ch == TokenUtil.CHAR_DOUBLE_QUOTES) {
                 // JSONField or JSONStringValue
                 token = this.createStandardValueToken();
