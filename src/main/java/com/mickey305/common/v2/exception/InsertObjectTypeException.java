@@ -1,7 +1,10 @@
 package com.mickey305.common.v2.exception;
 
-public class InsertObjectTypeException extends Exception {
+// This can not happen.
+public class InsertObjectTypeException extends RuntimeException {
+
     public InsertObjectTypeException(String msg) {
         super(msg);
     }
+
 }
