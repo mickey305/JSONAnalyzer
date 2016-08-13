@@ -22,7 +22,7 @@ public class TokenTest {
     }
 
     @Test
-    public void equals() throws Exception {
+    public void equalsAndClone() throws Exception {
         Token token11 = new Token('}');
         token11.setDepth(-1);
 

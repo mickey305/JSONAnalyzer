@@ -148,7 +148,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void equals() {
+    public void equalsAndClone() {
         Tokenizer<?> tokenizer11 = new Tokenizer<>(jsonArray);
         tokenizer11.next();
 
