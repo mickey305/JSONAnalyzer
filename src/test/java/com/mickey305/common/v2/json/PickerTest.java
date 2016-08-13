@@ -45,8 +45,19 @@ public class PickerTest {
     }
 
     @Test
-    public void equals() throws Exception {
+    public void equalsAndClone() throws Exception {
+        Picker<?> picker11 = new Picker<>(jsonArray);
+        picker11.setOverwriteInterface(String::contains);
 
+        // case 1
+        Picker<?> picker12 = picker11;
+        picker12.setOverwriteInterface(String::equals);
+        assertEquals(true, picker11.equals(picker12));
+
+        // case 2
+        Picker<?> picker21 = picker11.clone();
+        picker12.setOverwriteInterface(String::endsWith);
+        assertEquals(false, picker11.equals(picker21));
     }
 
     @Test
