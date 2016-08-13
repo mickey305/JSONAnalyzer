@@ -1,7 +1,6 @@
 package com.mickey305.common.v2.json;
 
 import com.mickey305.common.v2.exception.InsertObjectTypeException;
-import com.mickey305.common.v2.exception.JSONTokenTypeException;
 import com.mickey305.common.v2.json.model.TYPE;
 import com.mickey305.common.v2.json.model.Token;
 import org.json.JSONArray;
@@ -188,12 +187,8 @@ public class PickerTest {
 
         // case 1-2
         picker = new Picker<>(jsonArray);
-        try {
-            picker.getValues("nothingKeyWord");
-            fail();
-        } catch (JSONTokenTypeException e) {
-            assertTrue(true);
-        }
+        list = picker.getValues("nothingKeyWord");
+        assertEquals(true, list.isEmpty());
 
         // case 2-1
         picker = new Picker<>(jsonArray);
@@ -219,6 +214,21 @@ public class PickerTest {
         assertEquals(2, list.size());
         assertEquals(true, 1 == list.stream().filter(token -> token.getString().equals("68.5")).count());
         assertEquals(true, 1 == list.stream().filter(token -> token.getString().equals("178")).count());
+
+        // case 4
+        picker = new Picker<>(jsonArray);
+        list = picker.getValues("first", "name");
+        assertEquals(0, list.size());
+
+        // case 5
+        picker = new Picker<>(jsonArray);
+        picker.setOverwriteInterface(String::contains);
+        list = picker.getValues("e", "st");
+        assertEquals(2, list.size());
+        assertEquals("tanaka", list.get(0).getString());
+        assertEquals(TYPE.VALUE_STRING, list.get(0).getType());
+        assertEquals("ichiro", list.get(1).getString());
+        assertEquals(TYPE.VALUE_STRING, list.get(1).getType());
     }
 
     @Test

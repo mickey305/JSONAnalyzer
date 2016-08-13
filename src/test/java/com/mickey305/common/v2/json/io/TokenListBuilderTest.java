@@ -92,6 +92,7 @@ public class TokenListBuilderTest {
         assertEquals(TYPE.END_OBJECT, list.get(7).getType());
         assertEquals(TYPE.END_OBJECT, list.get(8).getType());
 
+        //// depth data test
         assertEquals(0, list.get(0).getDepth());
         assertEquals(0, list.get(1).getDepth());
         assertEquals(1, list.get(2).getDepth());
