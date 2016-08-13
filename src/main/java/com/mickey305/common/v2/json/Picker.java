@@ -63,7 +63,7 @@ public class Picker<T> implements Cloneable {
      *
      * @param JsonObjectJsonArray
      */
-    public Picker(final T JsonObjectJsonArray) {
+    public Picker(final T JsonObjectJsonArray) throws InsertObjectTypeException {
         tokenList = new ArrayList<>();
         this.buildTokenList(JsonObjectJsonArray);
     }
@@ -72,12 +72,8 @@ public class Picker<T> implements Cloneable {
      *
      * @param inst is JSONObject or JSONArray
      */
-    public synchronized void buildTokenList(final T inst) {
-        try {
-            TokenListBuilder.build(inst, this.tokenList);
-        } catch (InsertObjectTypeException e) {
-            e.printStackTrace();
-        }
+    private synchronized void buildTokenList(final T inst) throws InsertObjectTypeException {
+        TokenListBuilder.build(inst, this.tokenList);
     }
 
     /**
