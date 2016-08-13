@@ -36,6 +36,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.mickey305.common.v2.json.ObjectTypeChecker.isJSONObjectOrJSONArray;
+
 /**
  * Picker is the Utility Class to search the JSONObject or JSONArray Information.
  *
@@ -331,7 +333,7 @@ public class Picker<T> implements Cloneable {
                 final Object obj = jsonValueList.remove(0).getObject();
 
                 // skip others object (only - JSONObject or JSONArray)
-                if (!ObjectTypeChecker.isJSONObjectOrJSONArray(obj))
+                if (!isJSONObjectOrJSONArray(obj))
                     continue;
 
                 List<Token> tmpTokenList = new ArrayList<>();
