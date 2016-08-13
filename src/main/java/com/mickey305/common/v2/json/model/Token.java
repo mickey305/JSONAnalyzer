@@ -52,6 +52,10 @@ public class Token implements Cloneable {
         this(TYPE.VALUE_NUMBER_I, String.valueOf(num));
     }
 
+    public Token(boolean bool) {
+        this((bool)? TYPE.VALUE_TRUE : TYPE.VALUE_FALSE, String.valueOf(bool));
+    }
+
     /**
      *
      * @param num
@@ -122,6 +126,8 @@ public class Token implements Cloneable {
             return new JSONArray(str);
         else if(type == TYPE.VALUE_JSON_OBJECT)
             return new JSONObject(str);
+        else if(type == TYPE.VALUE_FALSE || type == TYPE.VALUE_TRUE)
+            return Boolean.parseBoolean(str);
         else
             return str;
     }
