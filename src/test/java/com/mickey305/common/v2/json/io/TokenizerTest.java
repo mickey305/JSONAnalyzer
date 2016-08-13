@@ -147,4 +147,19 @@ public class TokenizerTest {
 
     }
 
+    @Test
+    public void equals() {
+        Tokenizer<?> tokenizer11 = new Tokenizer<>(jsonArray);
+        tokenizer11.next();
+
+        // case 1
+        Tokenizer<?> tokenizer12 = tokenizer11;
+        tokenizer12.next();
+        assertEquals(true, tokenizer11.equals(tokenizer12));
+
+        // case 2
+        Tokenizer<?> tokenizer21 = tokenizer11.clone();
+        assertEquals(false, tokenizer11.equals(tokenizer21));
+    }
+
 }
