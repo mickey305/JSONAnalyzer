@@ -1,5 +1,6 @@
 package com.mickey305.common.v2.json.io;
 
+import com.mickey305.common.v2.exception.InsertObjectTypeException;
 import com.mickey305.common.v2.json.model.TYPE;
 import com.mickey305.common.v2.json.model.Token;
 import org.json.JSONArray;
@@ -31,6 +32,35 @@ public class TokenListBuilderTest {
     public void tearDown() throws Exception {
         jsonObject = null;
         jsonArray = null;
+    }
+
+    @Test
+    public void getInstance() throws Exception {
+        List<Token> list = new ArrayList<>();
+
+        // case 1
+        try {
+            TokenListBuilder.build(jsonObject, list);
+            assertTrue(true);
+        } catch (InsertObjectTypeException e) {
+            fail();
+        }
+
+        // case 2
+        try {
+            TokenListBuilder.build(jsonArray, list);
+            assertTrue(true);
+        } catch (InsertObjectTypeException e) {
+            fail();
+        }
+
+        // case 3
+        try {
+            TokenListBuilder.build("Error Text", list);
+            fail();
+        } catch (InsertObjectTypeException e) {
+            assertTrue(true);
+        }
     }
 
     @Test

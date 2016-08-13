@@ -1,5 +1,6 @@
 package com.mickey305.common.v2.json.io;
 
+import com.mickey305.common.v2.exception.InsertObjectTypeException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
@@ -26,6 +27,33 @@ public class TokenizerTest {
     public void tearDown() throws Exception {
         jsonObject = null;
         jsonArray = null;
+    }
+
+    @Test
+    public void getInstance() throws Exception {
+        // case 1
+        try {
+            new Tokenizer<>(jsonArray);
+            assertTrue(true);
+        } catch (InsertObjectTypeException e) {
+            fail();
+        }
+
+        // case 2
+        try {
+            new Tokenizer<>(jsonObject);
+            assertTrue(true);
+        } catch (InsertObjectTypeException e) {
+            fail();
+        }
+
+        // case 1
+        try {
+            new Tokenizer<>("String: Error Object");
+            fail();
+        } catch (InsertObjectTypeException e) {
+            assertTrue(true);
+        }
     }
 
     @Test

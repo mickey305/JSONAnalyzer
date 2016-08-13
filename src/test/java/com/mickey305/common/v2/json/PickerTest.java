@@ -1,5 +1,6 @@
 package com.mickey305.common.v2.json;
 
+import com.mickey305.common.v2.exception.InsertObjectTypeException;
 import com.mickey305.common.v2.exception.JSONTokenTypeException;
 import com.mickey305.common.v2.json.model.TYPE;
 import com.mickey305.common.v2.json.model.Token;
@@ -32,6 +33,33 @@ public class PickerTest {
     public void tearDown() throws Exception {
         jsonObject = null;
         jsonArray = null;
+    }
+
+    @Test
+    public void getInstance() throws Exception {
+        // case 1
+        try {
+            new Picker<>(jsonArray);
+            assertTrue(true);
+        } catch (InsertObjectTypeException e) {
+            fail();
+        }
+
+        // case 2
+        try {
+            new Picker<>(jsonObject);
+            assertTrue(true);
+        } catch (InsertObjectTypeException e) {
+            fail();
+        }
+
+        // case 3
+        try {
+            new Picker<>("String: error object");
+            fail();
+        } catch (InsertObjectTypeException e) {
+            assertTrue(true);
+        }
     }
 
     @Test
