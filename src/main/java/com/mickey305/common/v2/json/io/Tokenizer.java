@@ -41,6 +41,7 @@ import java.util.Stack;
 
 public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
     public static final String TAG = Tokenizer.class.getName();
+    public static final int TOKEN_DEPTH_INIT = 0;
 
     private ScannerLine line;
     private Token prevToken;
@@ -50,6 +51,22 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
 
     public Tokenizer(T t) throws InsertObjectTypeException {
         this.initialize(t);
+    }
+
+    /**
+     *
+     * @param t
+     * @throws InsertObjectTypeException
+     */
+    private void initialize(T t) throws InsertObjectTypeException {
+        // insert object type check
+        IterationUtil.checkObjectType(t);
+
+        // initialize task
+        line = new ScannerLine(t.toString());
+        prevToken = null;
+        index = 0;
+        innerJSONArrayStack = new Stack<>();
     }
 
     /**
@@ -127,7 +144,7 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
                 token = this.createStandardValueToken();
             } else {
                 // error
-                if (TokenUtil.isEndSymbol(prevToken) && prevToken.getDepth() == 1)
+                if (TokenUtil.isEndSymbol(prevToken) && prevToken.getDepth() == TOKEN_DEPTH_INIT)
                     throw new JSONTokenTypeException("json token end: iteration out of bounds.");
                 else
                     throw new JSONSyntaxException("json syntax error: unexpected character type.");
@@ -144,22 +161,6 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
         this.index++;
 
         return (token);
-    }
-
-    /**
-     *
-     * @param t
-     * @throws InsertObjectTypeException
-     */
-    protected void initialize(T t) throws InsertObjectTypeException {
-        // insert object type check
-        IterationUtil.checkObjectType(t);
-
-        // initialize task
-        line = new ScannerLine(t.toString());
-        prevToken = null;
-        index = 0;
-        innerJSONArrayStack = new Stack<>();
     }
 
     /**
@@ -209,11 +210,9 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
             param += line.next();
             ch = line.peek();
         }
-        try {
-            token = new Token(Integer.parseInt(param));
-        } catch (NumberFormatException e) {
-            token = new Token(Float.parseFloat(param));
-        }
+        token = (param.contains(String.valueOf(TokenUtil.CHAR_DOT)))?
+                new Token(Float.parseFloat(param)):
+                new Token(Integer.parseInt(param));
         return token;
     }
 
@@ -287,7 +286,7 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
 
     private static void chgDepth(Token prevToken, Token currentToken) {
         if(prevToken == null) {
-            currentToken.setDepth(0);
+            currentToken.setDepth(TOKEN_DEPTH_INIT);
             return;
         }
 

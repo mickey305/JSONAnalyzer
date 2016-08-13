@@ -25,7 +25,6 @@ package com.mickey305.common.v2.json;
 
 import com.mickey305.common.v2.exception.InsertObjectTypeException;
 import com.mickey305.common.v2.exception.JSONSyntaxException;
-import com.mickey305.common.v2.exception.JSONTokenTypeException;
 import com.mickey305.common.v2.json.io.TokenListBuilder;
 import com.mickey305.common.v2.json.model.TYPE;
 import com.mickey305.common.v2.json.model.Token;
@@ -33,6 +32,8 @@ import com.mickey305.common.v2.json.model.TokenUtil;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -142,9 +143,8 @@ public class Picker<T> implements Cloneable {
     public List<Token> getAllKeyHashList() {
         List<Token> keyHashList = new ArrayList<>();
         Set<String> hashSet = this.getAllKeyHashSet();
-        Iterator<String> iterator = hashSet.iterator();
-        while (iterator.hasNext()) {
-            Token token = new Token(TYPE.FIELD_NAME, iterator.next());
+        for (String aHashSet : hashSet) {
+            Token token = new Token(TYPE.FIELD_NAME, aHashSet);
             keyHashList.add(token);
         }
         return (keyHashList);
@@ -170,7 +170,7 @@ public class Picker<T> implements Cloneable {
      *
      * @return All Value List contained in JSONObject or JSONArray
      */
-    public List<Token> getAllValueList() throws JSONTokenTypeException, JSONSyntaxException {
+    public List<Token> getAllValueList() throws JSONSyntaxException {
         // add Value-List of Hash-JSONKey
         List<Token> valueList = new ArrayList<>();
         List<Token> allKeyHashList = this.getAllKeyHashList();
@@ -193,7 +193,7 @@ public class Picker<T> implements Cloneable {
      *
      * @return All Value Hashed List
      */
-    public List<Token> getAllValueHashList() throws JSONTokenTypeException, JSONSyntaxException {
+    public List<Token> getAllValueHashList() throws JSONSyntaxException {
         List<Token> allValueList = this.getAllValueList();
         List<Token> valueHashList = new ArrayList<>();
         Set<String> hashSet = this.getAllValueHashSet();
@@ -213,7 +213,7 @@ public class Picker<T> implements Cloneable {
      *
      * @return All Value HashSet
      */
-    public Set<String> getAllValueHashSet() throws JSONTokenTypeException, JSONSyntaxException {
+    public Set<String> getAllValueHashSet() throws JSONSyntaxException {
         List<Token> allValueList = this.getAllValueList();
         List<String> strAllValueList = new ArrayList<>();
         while (!allValueList.isEmpty())
@@ -284,28 +284,26 @@ public class Picker<T> implements Cloneable {
      * @param tokenList JSON Token List
      * @return Matched JSONValue List
      */
-    private List<Token> getValues(String key, List<Token> tokenList) throws JSONTokenTypeException {
+    private List<Token> getValues(String key, List<Token> tokenList) {
         List<Token> outList = new ArrayList<>();
-        Token token;
+        Token currentToken;
         for (int i=0; i < tokenList.size(); i++) {
-            token = tokenList.get(i);
+            currentToken = tokenList.get(i);
 
             // searching logic
-            boolean match = token.getString().equals(key);
+            boolean match = currentToken.getString().equals(key);
             if (overwriteInterface != null)
-                match = overwriteInterface.changeSearchLogic(token.getString(), key);
+                match = overwriteInterface.changeSearchLogic(currentToken.getString(), key);
 
-            if(token.getType() == TYPE.FIELD_NAME && match) {
-                token = tokenList.get(i + 1);
+            if(currentToken.getType() == TYPE.FIELD_NAME && match) {
+                currentToken = tokenList.get(i + 1);
 
-                if(token.getType().isValue())
-                    outList.add(token);
-                else if(TokenUtil.isStartSymbol(token))
+                if(currentToken.getType().isValue())
+                    outList.add(currentToken);
+                else if(TokenUtil.isStartSymbol(currentToken))
                     outList.add(this.generateEmbeddedValue(tokenList, i + 1));
             }
         }
-        if(outList.isEmpty())
-            throw new JSONTokenTypeException("Not Found: JSON values");
 
         return (outList);
     }
@@ -315,7 +313,7 @@ public class Picker<T> implements Cloneable {
      * @param key
      * @return
      */
-    public List<Token> getValues(String key) throws JSONTokenTypeException {
+    public List<Token> getValues(String key) {
         List<Token> tokenList = new ArrayList<>(this.tokenList);
         return this.getValues(key, tokenList);
     }
@@ -325,19 +323,20 @@ public class Picker<T> implements Cloneable {
      * @param keyList
      * @return
      */
-    public List<Token> getValues(List<String> keyList) throws JSONTokenTypeException {
+    public List<Token> getValues(List<String> keyList) {
         List<Token> jsonValueList = this.getValues(keyList.remove(0));
         while (!keyList.isEmpty()) {
             String key = keyList.remove(0);
             List<Token> tmpJsonValueList = new ArrayList<>();
             while (!jsonValueList.isEmpty()) {
                 final Object obj = jsonValueList.remove(0).getObject();
+
+                // skip others object (only - JSONObject or JSONArray)
+                if (!(obj instanceof JSONObject || obj instanceof JSONArray))
+                    continue;
+
                 List<Token> tmpTokenList = new ArrayList<>();
-                try {
-                    TokenListBuilder.build(obj, tmpTokenList);
-                } catch (InsertObjectTypeException e) {
-                    e.printStackTrace();
-                }
+                TokenListBuilder.build(obj, tmpTokenList);
                 tmpJsonValueList.addAll(this.getValues(key, tmpTokenList));
             }
             jsonValueList = tmpJsonValueList;
@@ -350,7 +349,7 @@ public class Picker<T> implements Cloneable {
      * @param keys
      * @return
      */
-    public List<Token> getValues(String... keys) throws JSONTokenTypeException {
+    public List<Token> getValues(String... keys) {
         List<String> keyList = Arrays.asList(keys);
         return this.getValues(new ArrayList<>(keyList));
     }
@@ -407,7 +406,7 @@ public class Picker<T> implements Cloneable {
      * @param key
      * @return
      */
-    public List<Token> searchValues(String key) throws JSONTokenTypeException {
+    public List<Token> searchValues(String key) {
         return this.getValues(key);
     }
 
@@ -416,7 +415,7 @@ public class Picker<T> implements Cloneable {
      * @param keyList
      * @return
      */
-    public List<Token> searchValues(List<String> keyList) throws JSONTokenTypeException {
+    public List<Token> searchValues(List<String> keyList) {
         return this.getValues(keyList);
     }
 
@@ -425,7 +424,7 @@ public class Picker<T> implements Cloneable {
      * @param keys
      * @return
      */
-    public List<Token> searchValues(String... keys) throws JSONTokenTypeException {
+    public List<Token> searchValues(String... keys) {
         return this.getValues(keys);
     }
 
@@ -451,6 +450,9 @@ public class Picker<T> implements Cloneable {
         final Token startToken = tokenList.get(start);
         final TYPE startType = startToken.getType();
         final TYPE endType = TokenUtil.getSymbolMap().get(startType);
+
+        assert TokenUtil.isStartSymbol(startType);
+        assert TokenUtil.isEndSymbol(endType);
         for (int k = start; k < tokenList.size() - 1; k++) {
             currentToken = tokenList.get(k);
             nextToken = tokenList.get(k + 1);
