@@ -159,6 +159,7 @@ public class TokenizerTest {
 
         // case 2
         Tokenizer<?> tokenizer21 = tokenizer11.clone();
+        tokenizer21.next();
         assertEquals(false, tokenizer11.equals(tokenizer21));
     }
 
