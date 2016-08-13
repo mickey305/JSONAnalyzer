@@ -203,6 +203,7 @@ public class Picker<T> implements Cloneable {
                 if (token.getString().equals(value))
                     type = token.getType();
             }
+            assert type != null;
             Token token = new Token(type, value);
             valueHashList.add(token);
         }
@@ -287,7 +288,7 @@ public class Picker<T> implements Cloneable {
     private List<Token> getValues(String key, List<Token> tokenList) {
         List<Token> outList = new ArrayList<>();
         Token currentToken;
-        for (int i=0; i < tokenList.size(); i++) {
+        for (int i = 0; i < tokenList.size() - 1; i++) {
             currentToken = tokenList.get(i);
 
             // searching logic
