@@ -398,7 +398,7 @@ public class Picker<T> implements Cloneable {
      */
     public boolean isExistAllKeys(String... keys) {
         List<String> keyList = new ArrayList<>();
-        for(String key: keys) keyList.add(key);
+        Collections.addAll(keyList, keys);
         return this.isExistAllKeys(keyList);
     }
 
