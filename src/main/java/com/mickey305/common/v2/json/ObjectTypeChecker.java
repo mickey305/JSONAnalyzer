@@ -21,24 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.mickey305.common.v2.json.io;
+package com.mickey305.common.v2.json;
 
-import com.mickey305.common.v2.exception.InsertObjectTypeException;
-import com.mickey305.common.v2.json.ObjectTypeChecker;
+import org.jetbrains.annotations.Contract;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-public class IterationUtil {
-    public static final String TAG = IterationUtil.class.getName();
+public class ObjectTypeChecker {
+    private ObjectTypeChecker() {}
 
-    private IterationUtil() {}
-
-    /**
-     *
-     * @param t
-     * @throws InsertObjectTypeException
-     */
-    public static <T> void checkObjectType(T t) throws InsertObjectTypeException {
-        if(!ObjectTypeChecker.isJSONObjectOrJSONArray(t))
-            throw new InsertObjectTypeException("Unexpected Object:\n"
-                    + "\tplease insert the instance object of the JSONObject.class, JSONArray.class or subclass.");
+    @Contract(value = "null -> false", pure = true)
+    public static boolean isJSONObjectOrJSONArray(Object obj) {
+        return obj instanceof JSONObject || obj instanceof JSONArray;
     }
 }

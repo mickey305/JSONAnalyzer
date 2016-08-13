@@ -32,8 +32,6 @@ import com.mickey305.common.v2.json.model.TokenUtil;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -333,7 +331,7 @@ public class Picker<T> implements Cloneable {
                 final Object obj = jsonValueList.remove(0).getObject();
 
                 // skip others object (only - JSONObject or JSONArray)
-                if (!(obj instanceof JSONObject || obj instanceof JSONArray))
+                if (!ObjectTypeChecker.isJSONObjectOrJSONArray(obj))
                     continue;
 
                 List<Token> tmpTokenList = new ArrayList<>();
