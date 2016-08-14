@@ -213,7 +213,7 @@ public class PickerTest {
         list = picker.getValues("eight");
         assertEquals(2, list.size());
         assertEquals(true, 1 == list.stream().filter(token -> token.getString().equals("68.5")).count());
-        assertEquals(false, 1 == list.stream().filter(token -> token.getString().equals("178")).count());
+        assertEquals(true, 1 == list.stream().filter(token -> token.getString().equals("178")).count());
 
         // case 4
         picker = new Picker<>(jsonArray);
