@@ -1,7 +1,7 @@
 # JSONAnalyzer
 
-|| branch | travis ci |
-|:-|:-|
+| | branch | travis ci |
+|:---:|:---|:---|
 | release | gh-pages | [![Build Status](https://travis-ci.org/mickey305/JSONAnalyzer.svg?branch=gh-pages)](https://travis-ci.org/mickey305/JSONAnalyzer) |
 | - | develop | [![Build Status](https://travis-ci.org/mickey305/JSONAnalyzer.svg?branch=develop)](https://travis-ci.org/mickey305/JSONAnalyzer) |
 
