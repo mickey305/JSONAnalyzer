@@ -1,0 +1,7 @@
+language: groovy
+branches:
+  only:
+    - gh-pages
+script: ./.test.sh
+jdk:
+  - oraclejdk8
