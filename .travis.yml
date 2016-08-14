@@ -2,6 +2,7 @@ language: groovy
 branches:
   only:
     - gh-pages
+    - develop
 script: ./.test.sh
 jdk:
   - oraclejdk8
