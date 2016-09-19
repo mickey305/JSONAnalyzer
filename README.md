@@ -20,7 +20,7 @@ repositories {
 ```
 dependencies {
   // newest version
-  compile 'com.mickey305:JSONAnalyzer:+@jar'
+  compile 'com.mickey305:library:+@jar'
   ...
 }
 ```
@@ -28,9 +28,10 @@ dependencies {
 ```
 dependencies {
   // target version - e.g. version 0.1
-  compile 'com.mickey305:JSONAnalyzer:0.1'
+  compile 'com.mickey305:library:0.1'
   ...
 }
 ```
 # History
+ * version 0.1.1 deploy - 2016-9-20
  * version 0.1 deploy - 2016-8-14

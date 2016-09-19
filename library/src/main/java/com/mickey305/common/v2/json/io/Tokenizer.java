@@ -290,7 +290,9 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
             return;
         }
 
-        if(TokenUtil.isStartSymbol(currentToken)) {
+        if(TokenUtil.isStartSymbol(currentToken) && TokenUtil.isEndSymbol(prevToken)) {
+            currentToken.setDepth(prevToken.getDepth());
+        } else if(TokenUtil.isStartSymbol(currentToken)) {
             currentToken.setDepth(prevToken.getDepth() + 1);
         } else if(TokenUtil.isEndSymbol(prevToken)) {
             currentToken.setDepth(prevToken.getDepth() - 1);
