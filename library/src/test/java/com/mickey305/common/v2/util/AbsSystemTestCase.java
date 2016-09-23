@@ -1,8 +1,6 @@
 package com.mickey305.common.v2.util;
 
 import org.jetbrains.annotations.Contract;
-import org.junit.After;
-import org.junit.Before;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -12,7 +10,9 @@ import java.util.regex.Pattern;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
-public abstract class AbsSystemTestCase implements AssertSystemMethods {
+public abstract class AbsSystemTestCase extends AbsBaseTestCase implements AssertSystemMethods {
+    public static final String TAG = AbsSystemTestCase.class.getSimpleName();
+
     private static final String NEW_LINE = System.lineSeparator();
     private static final UnaryOperator<String> addStartMark = data -> "^" + data;
     private static final UnaryOperator<String> addEndMark = data -> data + "$";
@@ -20,14 +20,16 @@ public abstract class AbsSystemTestCase implements AssertSystemMethods {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 
-    @Before
+    @Override
     public void setUp() throws Exception {
+        super.setUp();
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
     }
 
-    @After
+    @Override
     public void tearDown() throws Exception {
+        super.tearDown();
         System.setOut(null);
         System.setErr(null);
     }
@@ -82,10 +84,4 @@ public abstract class AbsSystemTestCase implements AssertSystemMethods {
     private String addReturnMark(String line) {
         return line + NEW_LINE;
     }
-
-    /**
-     * Class Tag information: e.g. class name etc.
-     * @return tag
-     */
-    public abstract String getTag();
 }

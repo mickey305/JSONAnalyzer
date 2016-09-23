@@ -26,14 +26,10 @@ public class LogTest extends AbsSystemTestCase {
 
     @Test
     public void i() throws Exception {
-        List<String> testDataList = new ArrayList<>();
+        List<String> testDataList;
         List<String> regexList = new ArrayList<>();
 
-        testDataList.add("test default message 1");
-        testDataList.add("test default message 2");
-        testDataList.add("test default message 3");
-        testDataList.add("test default message 4");
-
+        testDataList = createSystemOutDemoData();
         testDataList.forEach(line -> regexList.add(REGEX + line));
 
         testDataList.forEach(Log::i);
@@ -43,18 +39,38 @@ public class LogTest extends AbsSystemTestCase {
 
     @Test
     public void e() throws Exception {
-        List<String> testDataList = new ArrayList<>();
+        List<String> testDataList;
         List<String> regexList = new ArrayList<>();
 
-        testDataList.add("test error message 1");
-        testDataList.add("test error message 2");
-        testDataList.add("test error message 3");
-        testDataList.add("test error message 4");
-
+        testDataList = createSystemErrDemoData();
         testDataList.forEach(line -> regexList.add(REGEX + line));
 
         testDataList.forEach(Log::e);
 
         assertStandardErrorPattern(regexList);
+    }
+
+    // execute - Log#i()
+    private List<String> createSystemOutDemoData() {
+        List<String> list = new ArrayList<>();
+
+        list.add("test default message 1");
+        list.add("test default message 2");
+        list.add("test default message 3");
+        list.add("test default message 4");
+
+        return list;
+    }
+
+    // execute - Log#e()
+    private List<String> createSystemErrDemoData() {
+        List<String> list = new ArrayList<>();
+
+        list.add("test error message 1");
+        list.add("test error message 2");
+        list.add("test error message 3");
+        list.add("test error message 4");
+
+        return list;
     }
 }
