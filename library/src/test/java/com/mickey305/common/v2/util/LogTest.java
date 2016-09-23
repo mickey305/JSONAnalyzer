@@ -1,50 +1,60 @@
 package com.mickey305.common.v2.util;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+public class LogTest extends AbsSystemTestCase {
+    public static final String TAG = LogTest.class.getSimpleName();
+    private static final String REGEX = "([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-2]?[0-9]):([0-9]{2}):([0-9]{2})\\.([0-9]{3}) - ";
 
-public class LogTest {
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-
-    @Before
+    @Override
     public void setUp() throws Exception {
-        System.setOut(new PrintStream(outContent));
-        System.setErr(new PrintStream(errContent));
+        super.setUp();
     }
 
-    @After
+    @Override
     public void tearDown() throws Exception {
-        System.setOut(null);
-        System.setErr(null);
+        super.tearDown();
+    }
+
+    @Override
+    public String getTag() {
+        return TAG;
     }
 
     @Test
     public void i() throws Exception {
-        String headerRegex = "^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-2]?[0-9]):([0-9]{2}):([0-9]{2})\\.([0-9]{3}) - ";
-        Pattern pattern = Pattern.compile(headerRegex + "default message test\n");
+        List<String> testDataList = new ArrayList<>();
+        List<String> regexList = new ArrayList<>();
 
-        Log.i("default message test");
+        testDataList.add("test default message 1");
+        testDataList.add("test default message 2");
+        testDataList.add("test default message 3");
+        testDataList.add("test default message 4");
 
-        assertThat(pattern.matcher(outContent.toString()).matches(), is(true));
+        testDataList.forEach(line -> regexList.add(REGEX + line));
+
+        testDataList.forEach(Log::i);
+
+        assertStandardOutPattern(regexList);
     }
 
     @Test
     public void e() throws Exception {
-        String headerRegex = "^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-2]?[0-9]):([0-9]{2}):([0-9]{2})\\.([0-9]{3}) - ";
-        Pattern pattern = Pattern.compile(headerRegex + "error message test\n");
+        List<String> testDataList = new ArrayList<>();
+        List<String> regexList = new ArrayList<>();
 
-        Log.e("error message test");
+        testDataList.add("test error message 1");
+        testDataList.add("test error message 2");
+        testDataList.add("test error message 3");
+        testDataList.add("test error message 4");
 
-        assertThat(pattern.matcher(errContent.toString()).matches(), is(true));
+        testDataList.forEach(line -> regexList.add(REGEX + line));
+
+        testDataList.forEach(Log::e);
+
+        assertStandardErrorPattern(regexList);
     }
-
 }
