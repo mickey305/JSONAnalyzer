@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 K.Misaki
+ * Copyright (c) 2016 - 2017 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ package com.mickey305.common.v2.json;
 import com.mickey305.common.v2.exception.InsertObjectTypeException;
 import com.mickey305.common.v2.exception.JSONSyntaxException;
 import com.mickey305.common.v2.json.io.TokenListBuilder;
-import com.mickey305.common.v2.json.model.TYPE;
+import com.mickey305.common.v2.json.model.Type;
 import com.mickey305.common.v2.json.model.Token;
 import com.mickey305.common.v2.json.model.TokenUtil;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -103,13 +103,13 @@ public class Picker<T> implements Cloneable {
         List<Token> outValueList = new ArrayList<>();
         for(int i = 0; i < tokenList.size(); i++) {
             Token token = tokenList.get(i);
-            if(i == 0 && token.getType() != TYPE.START_ARRAY) break;
+            if(i == 0 && token.getType() != Type.START_ARRAY) break;
             if(i == 0) continue;
 
             if(TokenUtil.isStartSymbol(token))
                 outValueList.add(this.generateEmbeddedValue(tokenList, i));
 
-            if(token.getType() == TYPE.START_OBJECT)
+            if(token.getType() == Type.START_OBJECT)
                 i = getPairSymbolPoint(tokenList, i);
         }
         return (outValueList);
@@ -131,7 +131,7 @@ public class Picker<T> implements Cloneable {
     public List<Token> getAllKeyList() {
         List<Token> keyList = new ArrayList<>();
         this.tokenList.stream().filter(
-                token -> token.getType() == TYPE.FIELD_NAME
+                token -> token.getType() == Type.FIELD_NAME
         ).forEach(keyList::add);
         return (keyList);
     }
@@ -144,7 +144,7 @@ public class Picker<T> implements Cloneable {
         List<Token> keyHashList = new ArrayList<>();
         Set<String> hashSet = this.getAllKeyHashSet();
         for (String aHashSet : hashSet) {
-            Token token = new Token(TYPE.FIELD_NAME, aHashSet);
+            Token token = new Token(Type.FIELD_NAME, aHashSet);
             keyHashList.add(token);
         }
         return (keyHashList);
@@ -198,7 +198,7 @@ public class Picker<T> implements Cloneable {
         List<Token> valueHashList = new ArrayList<>();
         Set<String> hashSet = this.getAllValueHashSet();
         for (String value : hashSet) {
-            TYPE type = null;
+            Type type = null;
             for (Token token : allValueList) {
                 if (token.getString().equals(value))
                     type = token.getType();
@@ -296,7 +296,7 @@ public class Picker<T> implements Cloneable {
             if (overwriteInterface != null)
                 match = overwriteInterface.changeSearchLogic(currentToken.getString(), key);
 
-            if(currentToken.getType() == TYPE.FIELD_NAME && match) {
+            if(currentToken.getType() == Type.FIELD_NAME && match) {
                 currentToken = tokenList.get(i + 1);
 
                 if(currentToken.getType().isValue())
@@ -371,7 +371,7 @@ public class Picker<T> implements Cloneable {
      */
     public boolean isExistKey(String key) {
         for(Token token: this.tokenList) {
-            if(token.getType() == TYPE.FIELD_NAME && token.getString().equals(key))
+            if(token.getType() == Type.FIELD_NAME && token.getString().equals(key))
                 return true;
         }
         return false;
@@ -449,8 +449,8 @@ public class Picker<T> implements Cloneable {
         Token nextToken;
         String value = "";
         final Token startToken = tokenList.get(start);
-        final TYPE startType = startToken.getType();
-        final TYPE endType = TokenUtil.getSymbolMap().get(startType);
+        final Type startType = startToken.getType();
+        final Type endType = TokenUtil.getSymbolMap().get(startType);
 
         assert TokenUtil.isStartSymbol(startType);
         assert TokenUtil.isEndSymbol(endType);
@@ -460,13 +460,13 @@ public class Picker<T> implements Cloneable {
             boolean isEnd = currentToken.getType() == endType && startToken.getDepth() == currentToken.getDepth();
 
             // create token-string and added double quotes
-            if(currentToken.getType() == TYPE.VALUE_STRING || currentToken.getType() == TYPE.FIELD_NAME)
+            if(currentToken.getType() == Type.VALUE_STRING || currentToken.getType() == Type.FIELD_NAME)
                 value += TokenUtil.CHAR_DOUBLE_QUOTES + currentToken.getString() + TokenUtil.CHAR_DOUBLE_QUOTES;
             else
                 value += currentToken.getString();
 
             // added colon
-            if(currentToken.getType() == TYPE.FIELD_NAME)
+            if(currentToken.getType() == Type.FIELD_NAME)
                 value += TokenUtil.CHAR_COLON;
 
             // added comma
@@ -489,7 +489,7 @@ public class Picker<T> implements Cloneable {
      */
     private int getPairSymbolPoint(List<Token> tokens, int start) throws JSONSyntaxException {
         final Token startToken = tokens.get(start);
-        final TYPE endType = TokenUtil.getSymbolMap().get(startToken.getType());
+        final Type endType = TokenUtil.getSymbolMap().get(startToken.getType());
         for (int index = start; index < tokens.size(); index++) {
             Token currentToken = tokens.get(index);
 

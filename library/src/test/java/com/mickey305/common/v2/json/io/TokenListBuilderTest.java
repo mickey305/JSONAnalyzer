@@ -1,7 +1,7 @@
 package com.mickey305.common.v2.json.io;
 
 import com.mickey305.common.v2.exception.InsertObjectTypeException;
-import com.mickey305.common.v2.json.model.TYPE;
+import com.mickey305.common.v2.json.model.Type;
 import com.mickey305.common.v2.json.model.Token;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -82,15 +82,15 @@ public class TokenListBuilderTest {
         assertEquals("}", list.get(7).getString());
         assertEquals("}", list.get(8).getString());
 
-        assertEquals(TYPE.START_OBJECT, list.get(0).getType());
-        assertEquals(TYPE.FIELD_NAME, list.get(1).getType());
-        assertEquals(TYPE.START_OBJECT, list.get(2).getType());
-        assertEquals(TYPE.FIELD_NAME, list.get(3).getType());
-        assertEquals(TYPE.VALUE_STRING, list.get(4).getType());
-        assertEquals(TYPE.FIELD_NAME, list.get(5).getType());
-        assertEquals(TYPE.VALUE_STRING, list.get(6).getType());
-        assertEquals(TYPE.END_OBJECT, list.get(7).getType());
-        assertEquals(TYPE.END_OBJECT, list.get(8).getType());
+        assertEquals(Type.START_OBJECT, list.get(0).getType());
+        assertEquals(Type.FIELD_NAME, list.get(1).getType());
+        assertEquals(Type.START_OBJECT, list.get(2).getType());
+        assertEquals(Type.FIELD_NAME, list.get(3).getType());
+        assertEquals(Type.VALUE_STRING, list.get(4).getType());
+        assertEquals(Type.FIELD_NAME, list.get(5).getType());
+        assertEquals(Type.VALUE_STRING, list.get(6).getType());
+        assertEquals(Type.END_OBJECT, list.get(7).getType());
+        assertEquals(Type.END_OBJECT, list.get(8).getType());
 
         //// depth data test
         assertEquals(0, list.get(0).getDepth());

@@ -1,7 +1,7 @@
 package com.mickey305.common.v2.json;
 
 import com.mickey305.common.v2.exception.InsertObjectTypeException;
-import com.mickey305.common.v2.json.model.TYPE;
+import com.mickey305.common.v2.json.model.Type;
 import com.mickey305.common.v2.json.model.Token;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -126,11 +126,11 @@ public class PickerTest {
         assertEquals(true, 1 <= list.stream().filter(token -> token.getString().equals("AAA")).count());
         assertEquals(true, 1 <= list.stream().filter(token -> token.getString().equals("TOEIC(750)")).count());
 
-        assertEquals(4, list.stream().filter(token -> token.getType() == TYPE.VALUE_JSON_OBJECT).count());
-        assertEquals(4, list.stream().filter(token -> token.getType() == TYPE.VALUE_STRING).count());
-        assertEquals(1, list.stream().filter(token -> token.getType() == TYPE.VALUE_JSON_ARRAY).count());
-        assertEquals(3, list.stream().filter(token -> token.getType() == TYPE.VALUE_NUMBER_I).count());
-        assertEquals(1, list.stream().filter(token -> token.getType() == TYPE.VALUE_NUMBER_F).count());
+        assertEquals(4, list.stream().filter(token -> token.getType() == Type.VALUE_JSON_OBJECT).count());
+        assertEquals(4, list.stream().filter(token -> token.getType() == Type.VALUE_STRING).count());
+        assertEquals(1, list.stream().filter(token -> token.getType() == Type.VALUE_JSON_ARRAY).count());
+        assertEquals(3, list.stream().filter(token -> token.getType() == Type.VALUE_NUMBER_I).count());
+        assertEquals(1, list.stream().filter(token -> token.getType() == Type.VALUE_NUMBER_F).count());
 
         assertEquals(true, list.size() == list.stream().filter(token -> token.getType().isValue()).count());
     }
@@ -159,11 +159,11 @@ public class PickerTest {
         assertEquals(true, 1 == list.stream().filter(token -> token.getString().equals("AAA")).count());
         assertEquals(true, 1 == list.stream().filter(token -> token.getString().equals("TOEIC(750)")).count());
 
-        assertEquals(4, list.stream().filter(token -> token.getType() == TYPE.VALUE_JSON_OBJECT).count());
-        assertEquals(4, list.stream().filter(token -> token.getType() == TYPE.VALUE_STRING).count());
-        assertEquals(1, list.stream().filter(token -> token.getType() == TYPE.VALUE_JSON_ARRAY).count());
-        assertEquals(2, list.stream().filter(token -> token.getType() == TYPE.VALUE_NUMBER_I).count());
-        assertEquals(1, list.stream().filter(token -> token.getType() == TYPE.VALUE_NUMBER_F).count());
+        assertEquals(4, list.stream().filter(token -> token.getType() == Type.VALUE_JSON_OBJECT).count());
+        assertEquals(4, list.stream().filter(token -> token.getType() == Type.VALUE_STRING).count());
+        assertEquals(1, list.stream().filter(token -> token.getType() == Type.VALUE_JSON_ARRAY).count());
+        assertEquals(2, list.stream().filter(token -> token.getType() == Type.VALUE_NUMBER_I).count());
+        assertEquals(1, list.stream().filter(token -> token.getType() == Type.VALUE_NUMBER_F).count());
 
         assertEquals(true, list.size() == list.stream().filter(token -> token.getType().isValue()).count());
     }
@@ -183,7 +183,7 @@ public class PickerTest {
         list = picker.getValues("license");
         assertEquals(1, list.size());
         assertEquals("[\"AAA\",\"TOEIC(750)\"]", list.get(0).getString());
-        assertEquals(TYPE.VALUE_JSON_ARRAY, list.get(0).getType());
+        assertEquals(Type.VALUE_JSON_ARRAY, list.get(0).getType());
 
         // case 1-2
         picker = new Picker<>(jsonArray);
@@ -198,14 +198,14 @@ public class PickerTest {
         list = picker.getValues(array);
         assertEquals(1, list.size());
         assertEquals("ichiro", list.get(0).getString());
-        assertEquals(TYPE.VALUE_STRING, list.get(0).getType());
+        assertEquals(Type.VALUE_STRING, list.get(0).getType());
 
         // case 2-2
         picker = new Picker<>(jsonArray);
         list = picker.getValues("name", "first");
         assertEquals(1, list.size());
         assertEquals("ichiro", list.get(0).getString());
-        assertEquals(TYPE.VALUE_STRING, list.get(0).getType());
+        assertEquals(Type.VALUE_STRING, list.get(0).getType());
 
         // case 3
         picker = new Picker<>(jsonArray);
@@ -226,9 +226,9 @@ public class PickerTest {
         list = picker.getValues("e", "st");
         assertEquals(2, list.size());
         assertEquals("tanaka", list.get(0).getString());
-        assertEquals(TYPE.VALUE_STRING, list.get(0).getType());
+        assertEquals(Type.VALUE_STRING, list.get(0).getType());
         assertEquals("ichiro", list.get(1).getString());
-        assertEquals(TYPE.VALUE_STRING, list.get(1).getType());
+        assertEquals(Type.VALUE_STRING, list.get(1).getType());
     }
 
     @Test

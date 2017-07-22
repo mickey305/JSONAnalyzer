@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 K.Misaki
+ * Copyright (c) 2016 - 2017 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ public class Token implements Cloneable {
     public static final String TAG = Token.class.getName();
 
     private String string;
-    private TYPE type;
+    private Type type;
     private int indexNumber;
     private int depth;
 
@@ -49,11 +49,11 @@ public class Token implements Cloneable {
      * @param num
      */
     public Token(int num) {
-        this(TYPE.VALUE_NUMBER_I, String.valueOf(num));
+        this(Type.VALUE_NUMBER_I, String.valueOf(num));
     }
 
     public Token(boolean bool) {
-        this((bool)? TYPE.VALUE_TRUE : TYPE.VALUE_FALSE, String.valueOf(bool));
+        this((bool)? Type.VALUE_TRUE : Type.VALUE_FALSE, String.valueOf(bool));
     }
 
     /**
@@ -61,14 +61,14 @@ public class Token implements Cloneable {
      * @param num
      */
     public Token(float num) {
-        this(TYPE.VALUE_NUMBER_F, String.valueOf(num));
+        this(Type.VALUE_NUMBER_F, String.valueOf(num));
     }
 
     public Token(String str) throws JSONTokenTypeException {
-        Map<String, TYPE> map = TokenUtil.getTokenMap();
+        Map<String, Type> map = TokenUtil.getTokenMap();
         if (!map.containsKey(str))
             throw new JSONTokenTypeException("JSONToken type error");
-        TYPE type = map.get(str);
+        Type type = map.get(str);
         setType(type);
         setString(str);
     }
@@ -77,7 +77,7 @@ public class Token implements Cloneable {
      * @param type
      * @param str
      */
-    public Token(TYPE type, String str) {
+    public Token(Type type, String str) {
         setType(type);
         setString(str);
     }
@@ -117,16 +117,16 @@ public class Token implements Cloneable {
 
     public Object getObject() {
         String str = getString();
-        TYPE type = getType();
-        if(type == TYPE.VALUE_NUMBER_I)
+        Type type = getType();
+        if(type == Type.VALUE_NUMBER_I)
             return Integer.parseInt(str);
-        else if(type == TYPE.VALUE_NUMBER_F)
+        else if(type == Type.VALUE_NUMBER_F)
             return Float.parseFloat(str);
-        else if(type == TYPE.VALUE_JSON_ARRAY)
+        else if(type == Type.VALUE_JSON_ARRAY)
             return new JSONArray(str);
-        else if(type == TYPE.VALUE_JSON_OBJECT)
+        else if(type == Type.VALUE_JSON_OBJECT)
             return new JSONObject(str);
-        else if(type == TYPE.VALUE_FALSE || type == TYPE.VALUE_TRUE)
+        else if(type == Type.VALUE_FALSE || type == Type.VALUE_TRUE)
             return Boolean.parseBoolean(str);
         else
             return str;
@@ -153,7 +153,7 @@ public class Token implements Cloneable {
      *
      * @return
      */
-    public TYPE getType() {
+    public Type getType() {
         return type;
     }
 
@@ -161,7 +161,7 @@ public class Token implements Cloneable {
      *
      * @param type
      */
-    public void setType(TYPE type) {
+    public void setType(Type type) {
         this.type = type;
     }
 

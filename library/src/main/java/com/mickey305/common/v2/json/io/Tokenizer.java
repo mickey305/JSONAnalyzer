@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 K.Misaki
+ * Copyright (c) 2016 - 2017 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ import com.mickey305.common.v2.exception.InsertObjectTypeException;
 import com.mickey305.common.v2.exception.JSONSyntaxException;
 import com.mickey305.common.v2.exception.JSONTokenTypeException;
 import com.mickey305.common.v2.json.model.TokenUtil;
-import com.mickey305.common.v2.json.model.TYPE;
+import com.mickey305.common.v2.json.model.Type;
 import com.mickey305.common.v2.json.model.Token;
 import com.mickey305.common.v2.string.ScannerLine;
 import com.mickey305.common.v2.util.CollectibleIterator;
@@ -236,21 +236,21 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
      * @return
      */
     private Token createStandardValueToken() throws JSONSyntaxException {
-        TYPE type;
-        TYPE prevType = prevToken.getType();
+        Type type;
+        Type prevType = prevToken.getType();
         if(!innerJSONArrayStack.peek()) {
             // Index: in JSONObject
-            if(prevType == TYPE.END_ARRAY || TokenUtil.isObjectSymbol(prevToken) || prevType.isValue())
-                type = TYPE.FIELD_NAME;
-            else if(prevType == TYPE.FIELD_NAME)
-                type = TYPE.VALUE_STRING;
+            if(prevType == Type.END_ARRAY || TokenUtil.isObjectSymbol(prevToken) || prevType.isValue())
+                type = Type.FIELD_NAME;
+            else if(prevType == Type.FIELD_NAME)
+                type = Type.VALUE_STRING;
             else
                 // json syntax error
                 throw new JSONSyntaxException("json syntax error: unexpected value type.");
 
         } else {
             // Index in JSONArray
-            type = TYPE.VALUE_STRING;
+            type = Type.VALUE_STRING;
         }
         String param = "";
         line.next();

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 K.Misaki
+ * Copyright (c) 2016 - 2017 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -66,33 +66,33 @@ public class TokenUtil {
 
     private TokenUtil() {}
 
-    public static Map<String, TYPE> getTokenMap() {
-        Map<String, TYPE> map = new HashMap<>();
-        map.put(String.valueOf(CHAR_END_ARRAY), TYPE.END_ARRAY);
-        map.put(String.valueOf(CHAR_END_OBJECT), TYPE.END_OBJECT);
-        map.put(String.valueOf(CHAR_START_ARRAY), TYPE.START_ARRAY);
-        map.put(String.valueOf(CHAR_START_OBJECT), TYPE.START_OBJECT);
-        map.put(STRING_FALSE, TYPE.VALUE_FALSE);
-        map.put(STRING_TRUE, TYPE.VALUE_TRUE);
-        map.put(STRING_NULL, TYPE.VALUE_NULL);
+    public static Map<String, Type> getTokenMap() {
+        Map<String, Type> map = new HashMap<>();
+        map.put(String.valueOf(CHAR_END_ARRAY), Type.END_ARRAY);
+        map.put(String.valueOf(CHAR_END_OBJECT), Type.END_OBJECT);
+        map.put(String.valueOf(CHAR_START_ARRAY), Type.START_ARRAY);
+        map.put(String.valueOf(CHAR_START_OBJECT), Type.START_OBJECT);
+        map.put(STRING_FALSE, Type.VALUE_FALSE);
+        map.put(STRING_TRUE, Type.VALUE_TRUE);
+        map.put(STRING_NULL, Type.VALUE_NULL);
         return map;
     }
 
-    public static Map<TYPE, TYPE> getSymbolMap() {
-        Map<TYPE, TYPE> map = new HashMap<>();
-        map.put(TYPE.START_ARRAY, TYPE.END_ARRAY);
-        map.put(TYPE.START_OBJECT, TYPE.END_OBJECT);
-        map.put(TYPE.END_ARRAY, TYPE.START_ARRAY);
-        map.put(TYPE.END_OBJECT, TYPE.START_OBJECT);
+    public static Map<Type, Type> getSymbolMap() {
+        Map<Type, Type> map = new HashMap<>();
+        map.put(Type.START_ARRAY, Type.END_ARRAY);
+        map.put(Type.START_OBJECT, Type.END_OBJECT);
+        map.put(Type.END_ARRAY, Type.START_ARRAY);
+        map.put(Type.END_OBJECT, Type.START_OBJECT);
         return map;
     }
 
-    public static Map<TYPE, TYPE> getConversionMap() {
-        Map<TYPE, TYPE> map = new HashMap<>();
-        map.put(TYPE.START_OBJECT, TYPE.VALUE_JSON_OBJECT);
-        map.put(TYPE.END_OBJECT, TYPE.VALUE_JSON_OBJECT);
-        map.put(TYPE.START_ARRAY, TYPE.VALUE_JSON_ARRAY);
-        map.put(TYPE.END_ARRAY, TYPE.VALUE_JSON_ARRAY);
+    public static Map<Type, Type> getConversionMap() {
+        Map<Type, Type> map = new HashMap<>();
+        map.put(Type.START_OBJECT, Type.VALUE_JSON_OBJECT);
+        map.put(Type.END_OBJECT, Type.VALUE_JSON_OBJECT);
+        map.put(Type.START_ARRAY, Type.VALUE_JSON_ARRAY);
+        map.put(Type.END_ARRAY, Type.VALUE_JSON_ARRAY);
         return map;
     }
 
@@ -144,23 +144,23 @@ public class TokenUtil {
     }
 
     @Contract(pure = true)
-    public static boolean isObjectSymbol(TYPE type) {
-        return type == TYPE.START_OBJECT || type == TYPE.END_OBJECT;
+    public static boolean isObjectSymbol(Type type) {
+        return type == Type.START_OBJECT || type == Type.END_OBJECT;
     }
 
     @Contract(pure = true)
-    public static boolean isArraySymbol(TYPE type) {
-        return type == TYPE.START_ARRAY || type == TYPE.END_ARRAY;
+    public static boolean isArraySymbol(Type type) {
+        return type == Type.START_ARRAY || type == Type.END_ARRAY;
     }
 
     @Contract(pure = true)
-    public static boolean isStartSymbol(TYPE type) {
-        return type == TYPE.START_ARRAY || type == TYPE.START_OBJECT;
+    public static boolean isStartSymbol(Type type) {
+        return type == Type.START_ARRAY || type == Type.START_OBJECT;
     }
 
     @Contract(pure = true)
-    public static boolean isEndSymbol(TYPE type) {
-        return type == TYPE.END_ARRAY || type == TYPE.END_OBJECT;
+    public static boolean isEndSymbol(Type type) {
+        return type == Type.END_ARRAY || type == Type.END_OBJECT;
     }
 
     public static boolean isObjectSymbol(Token token) {
@@ -184,8 +184,8 @@ public class TokenUtil {
     }
 
     @Contract(pure = true)
-    public static boolean isTypeEmbeddedValue(TYPE type) {
-        return type == TYPE.VALUE_JSON_ARRAY || type == TYPE.VALUE_JSON_OBJECT;
+    public static boolean isTypeEmbeddedValue(Type type) {
+        return type == Type.VALUE_JSON_ARRAY || type == Type.VALUE_JSON_OBJECT;
     }
 
 }

@@ -64,9 +64,9 @@ public class TokenTest {
         assertEquals("1.1", token.getString());
 
         // case 3
-        token = new Token(TYPE.VALUE_NULL, "null");
+        token = new Token(Type.VALUE_NULL, "null");
         assertEquals("null", token.getString());
-        token = new Token(TYPE.VALUE_JSON_ARRAY, "[\"AAAA\",\"BBBB\"]");
+        token = new Token(Type.VALUE_JSON_ARRAY, "[\"AAAA\",\"BBBB\"]");
         assertEquals("[\"AAAA\",\"BBBB\"]", token.getString());
 
         // case 4
@@ -97,13 +97,13 @@ public class TokenTest {
         assertEquals(true, token.getObject() instanceof Boolean);
         token = new Token(false);
         assertEquals(true, token.getObject() instanceof Boolean);
-        token = new Token(TYPE.VALUE_JSON_ARRAY, "[\"AAAA\",\"BBBB\"]");
+        token = new Token(Type.VALUE_JSON_ARRAY, "[\"AAAA\",\"BBBB\"]");
         assertEquals(true, token.getObject() instanceof JSONArray);
-        token = new Token(TYPE.VALUE_JSON_OBJECT, "{\"name\":\"michael\",\"from\":\"USA\"}");
+        token = new Token(Type.VALUE_JSON_OBJECT, "{\"name\":\"michael\",\"from\":\"USA\"}");
         assertEquals(true, token.getObject() instanceof JSONObject);
 
         // case 2
-        token = new Token(TYPE.VALUE_JSON_OBJECT, "[\"AAAA\",\"BBBB\"]");
+        token = new Token(Type.VALUE_JSON_OBJECT, "[\"AAAA\",\"BBBB\"]");
         try {
             token.getObject();
             fail();
@@ -118,23 +118,23 @@ public class TokenTest {
 
         // case 1
         token = new Token(11);
-        assertEquals(TYPE.VALUE_NUMBER_I, token.getType());
+        assertEquals(Type.VALUE_NUMBER_I, token.getType());
         token = new Token((float) 1.1);
-        assertEquals(TYPE.VALUE_NUMBER_F, token.getType());
+        assertEquals(Type.VALUE_NUMBER_F, token.getType());
         token = new Token(true);
-        assertEquals(TYPE.VALUE_TRUE, token.getType());
+        assertEquals(Type.VALUE_TRUE, token.getType());
         token = new Token(false);
-        assertEquals(TYPE.VALUE_FALSE, token.getType());
+        assertEquals(Type.VALUE_FALSE, token.getType());
         token = new Token('{');
-        assertEquals(TYPE.START_OBJECT, token.getType());
+        assertEquals(Type.START_OBJECT, token.getType());
         token = new Token('}');
-        assertEquals(TYPE.END_OBJECT, token.getType());
+        assertEquals(Type.END_OBJECT, token.getType());
         token = new Token('[');
-        assertEquals(TYPE.START_ARRAY, token.getType());
+        assertEquals(Type.START_ARRAY, token.getType());
         token = new Token(']');
-        assertEquals(TYPE.END_ARRAY, token.getType());
+        assertEquals(Type.END_ARRAY, token.getType());
         token = new Token("null");
-        assertEquals(TYPE.VALUE_NULL, token.getType());
+        assertEquals(Type.VALUE_NULL, token.getType());
     }
 
     @Test

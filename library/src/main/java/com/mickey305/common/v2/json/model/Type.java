@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 K.Misaki
+ * Copyright (c) 2016 - 2017 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  */
 package com.mickey305.common.v2.json.model;
 
-public enum TYPE {
+public enum Type {
     START_ARRAY         ( 0, true,  false),    // [
     END_ARRAY           ( 1, true,  false),    // ]
     START_OBJECT        ( 2, true,  false),    // {
@@ -38,7 +38,7 @@ public enum TYPE {
     VALUE_JSON_OBJECT   (11, false, true ),    // json value
     VALUE_JSON_ARRAY    (12, false, true );    // json value
 
-    TYPE(int code, boolean symbol, boolean value) {
+    Type(int code, boolean symbol, boolean value) {
         this.code = code;
         this.symbol = symbol;
         this.value = value;
