@@ -33,6 +33,7 @@ public enum Type {
     VALUE_NULL          ( 6, false, true ),    // json value
     VALUE_NUMBER_F      ( 7, false, true ),    // json value
     VALUE_NUMBER_I      ( 8, false, true ),    // json value
+    VALUE_NUMBER_DCML   (13, false, true ),    // json value
     VALUE_TRUE          ( 9, false, true ),    // json value
     VALUE_FALSE         (10, false, true ),    // json value
     VALUE_JSON_OBJECT   (11, false, true ),    // json value

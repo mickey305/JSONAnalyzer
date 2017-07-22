@@ -210,9 +210,15 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
             param += line.next();
             ch = line.peek();
         }
-        token = (param.contains(String.valueOf(TokenUtil.CH_DOT)))?
-                new Token(Float.parseFloat(param)):
-                new Token(Integer.parseInt(param));
+        String expL = String.valueOf(TokenUtil.CH_EXP);
+        String expU = String.valueOf(Character.toUpperCase(TokenUtil.CH_EXP));
+        if(param.contains(expL) || param.contains(expU)) {
+            token = new Token(Type.VALUE_NUMBER_DCML, param);
+        } else {
+            token = (param.contains(String.valueOf(TokenUtil.CH_DOT))) ?
+                    new Token(Float.parseFloat(param)) :
+                    new Token(Integer.parseInt(param));
+        }
         return token;
     }
 
@@ -253,13 +259,16 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
             type = Type.VALUE_STRING;
         }
         String param = "";
-        line.next();
+        line.next(); // skip dq
         char ch = line.peek();
-        while (line.hasNext() && ch != TokenUtil.CH_DOUBLE_QUOTES) {
+        char prevCh = 0;
+        while (line.hasNext() && !(
+                ch == TokenUtil.CH_DOUBLE_QUOTES && prevCh != TokenUtil.CH_BACK_SLASH)) {
             param += line.next();
+            prevCh = ch;
             ch = line.peek();
         }
-        line.next();
+        line.next(); // skip dq
         return new Token(type, param);
     }
 

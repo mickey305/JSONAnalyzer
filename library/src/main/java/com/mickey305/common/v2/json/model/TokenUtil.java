@@ -36,6 +36,7 @@ public class TokenUtil {
     public static final char CH_DOT = '.';
     public static final char CH_PLUS = '+';
     public static final char CH_MINUS = '-';
+    public static final char CH_EXP = 'e';
 
     public static final char CH_COMMA = ',';
     public static final char CH_COLON = ':';
@@ -45,13 +46,18 @@ public class TokenUtil {
     public static final char CH_START_OBJECT = '{';
     public static final char CH_END_OBJECT = '}';
     public static final char CH_DOUBLE_QUOTES = '"';
+    public static final char CH_BACK_SLASH = '\\';
 
     public static final String STRING_NULL  = "null";
     public static final String STRING_TRUE  = "true";
     public static final String STRING_FALSE = "false";
 
+    //===--- Protection Area --------------------------------------------------------------------------------------===//
+    private static final Character[] expArray = {
+            CH_EXP, Character.toUpperCase(CH_EXP)
+    };
     private static final Character[] figurePartsArray = {
-            CH_DOT, CH_PLUS, CH_MINUS
+            CH_DOT, CH_PLUS, CH_MINUS, CH_EXP, Character.toUpperCase(CH_EXP)
     };
     private static final Character[] operatorArray = {
             CH_PLUS, CH_MINUS
@@ -60,11 +66,13 @@ public class TokenUtil {
             CH_START_ARRAY, CH_START_OBJECT, CH_END_ARRAY, CH_END_OBJECT
     };
 
+    private static final List<Character> expList = Arrays.asList(expArray);
     private static final List<Character> figurePartsList = Arrays.asList(figurePartsArray);
     private static final List<Character> operatorList = Arrays.asList(operatorArray);
     private static final List<Character> symbolList = Arrays.asList(symbolArray);
 
-    private TokenUtil() {}
+    private TokenUtil() {} // static class protection
+    //===----------------------------------------------------------------------------------------------------------===//
 
     public static Map<String, Type> getTokenMap() {
         Map<String, Type> map = new HashMap<>();
@@ -94,6 +102,15 @@ public class TokenUtil {
         map.put(Type.START_ARRAY, Type.VALUE_JSON_ARRAY);
         map.put(Type.END_ARRAY, Type.VALUE_JSON_ARRAY);
         return map;
+    }
+
+    /**
+     *
+     * @param ch
+     * @return
+     */
+    public static boolean isExp(char ch) {
+        return expList.contains(ch);
     }
 
     /**
