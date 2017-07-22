@@ -291,6 +291,7 @@ public class Picker<T extends Token> implements Cloneable {
      * @param tokenList JSON Token List
      * @return Matched JSONValue List
      */
+    @SuppressWarnings("unchecked")
     private List<T> getValues(String key, List<T> tokenList) {
         List<T> outList = new ArrayList<>();
         T currentToken;
@@ -300,7 +301,7 @@ public class Picker<T extends Token> implements Cloneable {
             // searching logic
             boolean match = currentToken.getString().equals(key);
             if (overwriteInterface != null)
-                match = overwriteInterface.changeSearchLogic(currentToken.getString(), key);
+                match = overwriteInterface.changeSearchLogic(currentToken, key);
 
             if(currentToken.getType() == Type.FIELD_NAME && match) {
                 currentToken = tokenList.get(i + 1);
@@ -444,12 +445,24 @@ public class Picker<T extends Token> implements Cloneable {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    public interface OverwriteInterface {
-        boolean changeSearchLogic(String targetKey, String queryKey);
+    @FunctionalInterface
+    public interface OverwriteInterface<T extends Token> {
+        boolean changeSearchLogic(T targetToken, String query);
     }
 
     public void setOverwriteInterface(OverwriteInterface overwriteInterface) {
         this.overwriteInterface = overwriteInterface;
     }
 
+    public OverwriteInterface getOverwriteInterface() {
+        return overwriteInterface;
+    }
+
+    protected TokenSupplier<T> getSupplier() {
+        return supplier;
+    }
+
+    protected List<T> getTokenList() {
+        return tokenList;
+    }
 }

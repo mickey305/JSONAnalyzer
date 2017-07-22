@@ -42,7 +42,7 @@ public class AnalyzeUtil {
      * @param <T> generic type: Token class or subclasses
      * @return Embedded JSONToken(Embedded Value)
      */
-    static  <T extends Token> T generateEmbeddedValue(
+    static <T extends Token> T generateEmbeddedValue(
             List<T> tokenList, int start, @NotNull TokenSupplier<T> supplier) {
         T currentTok;
         T nextTok;
@@ -76,7 +76,10 @@ public class AnalyzeUtil {
 
             if(isEnd) break;
         }
-        return supplier.get(TokenUtil.getConversionMap().get(startType), val);
+        T outTok = supplier.get(TokenUtil.getConversionMap().get(startType), val);
+        outTok.setIndexNumber(startToken.getIndexNumber());
+        outTok.setDepth(startToken.getIndexNumber());
+        return outTok;
     }
 
     /**

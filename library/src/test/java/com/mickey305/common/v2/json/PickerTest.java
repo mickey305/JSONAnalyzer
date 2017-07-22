@@ -78,16 +78,16 @@ public class PickerTest {
     @Test
     public void equalsAndClone() throws Exception {
         Picker<Token> picker11 = new Picker<>(jsonArray, supplier);
-        picker11.setOverwriteInterface(String::contains);
+        picker11.setOverwriteInterface((targetToken, query) -> targetToken.getString().contains(query));
 
         // case 1
         Picker<Token> picker12 = picker11;
-        picker12.setOverwriteInterface(String::equals);
+        picker12.setOverwriteInterface((targetToken, query) -> targetToken.getString().equals(query));
         assertEquals(true, picker11.equals(picker12));
 
         // case 2
         Picker<Token> picker21 = picker11.clone();
-        picker12.setOverwriteInterface(String::endsWith);
+        picker12.setOverwriteInterface((targetToken, query) -> targetToken.getString().endsWith(query));
         assertEquals(false, picker11.equals(picker21));
     }
 
@@ -213,7 +213,7 @@ public class PickerTest {
 
         // case 3
         picker = new Picker<>(jsonArray, supplier);
-        picker.setOverwriteInterface(String::contains);
+        picker.setOverwriteInterface((targetToken, query) -> targetToken.getString().contains(query));
         list = picker.getValues("eight");
         assertEquals(2, list.size());
         assertEquals(true, 1 == list.stream().filter(token -> token.getString().equals("68.5")).count());
@@ -226,7 +226,7 @@ public class PickerTest {
 
         // case 5
         picker = new Picker<>(jsonArray, supplier);
-        picker.setOverwriteInterface(String::contains);
+        picker.setOverwriteInterface((targetToken, query) -> targetToken.getString().contains(query));
         list = picker.getValues("e", "st");
         assertEquals(2, list.size());
         assertEquals("tanaka", list.get(0).getString());

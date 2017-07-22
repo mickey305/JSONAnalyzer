@@ -1,13 +1,18 @@
 package com.mickey305.sample;
 
+import com.mickey305.common.v2.json.ArrayFinder;
+import com.mickey305.common.v2.json.ObjectFinder;
 import com.mickey305.common.v2.json.Picker;
+import com.mickey305.common.v2.json.io.TokenListBuilder;
 import com.mickey305.common.v2.json.model.Token;
 import com.mickey305.common.v2.util.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class JSONComplexMain {
     public static void main(String[] args) {
@@ -97,5 +102,21 @@ public class JSONComplexMain {
             if (mostTopping.isPresent() && json.toString().contains(mostTopping.get().getString()))
                 Log.i("Most topping food is " + ((JSONObject) json).get("name").toString());
         });
+
+        Log.i("-------------------------------------------------------------------------------------------");
+        ObjectFinder<Token> finder = new ObjectFinder<>(ary, Token::new);
+        finder.setOverwriteInterface((targetTok, query) -> targetTok.getString().equals(query) && targetTok.getDepth() == 1);
+        List<Token> objects = finder.findByKey("type");
+        objects.forEach(obj -> Log.i(obj.getString()));
+        JSONObject tmp = new JSONObject("{a:{b:1,c:2,d:3,e:[12,{f:4,g:5},{h:[12]}]}}");
+        List<Token> tmp2 = TokenListBuilder.buildArrayList(tmp, Token::new);
+        List<Integer> tmp3 = tmp2.stream().map(Token::getDepth).collect(Collectors.toList());
+        Log.i(tmp3.toString());
+
+        Log.i("-------------------------------------------------------------------------------------------");
+        ArrayFinder<Token> finder2 = new ArrayFinder<>(ary, Token::new);
+        List<Token> objects2 = finder2.findByValue("{\"id\":\"1001\",\"type\":\"Regular\"}");
+//        List<Token> objects2 = finder2.findByValue("None");
+        objects2.forEach(obj -> Log.i(obj.getString()));
     }
 }
