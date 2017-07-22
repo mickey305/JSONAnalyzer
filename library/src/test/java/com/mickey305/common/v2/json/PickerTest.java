@@ -1,6 +1,7 @@
 package com.mickey305.common.v2.json;
 
 import com.mickey305.common.v2.exception.InsertObjectTypeException;
+import com.mickey305.common.v2.json.model.TokenSupplier;
 import com.mickey305.common.v2.json.model.Type;
 import com.mickey305.common.v2.json.model.Token;
 import org.json.JSONArray;
@@ -17,6 +18,7 @@ import static org.junit.Assert.*;
 public class PickerTest {
     private JSONObject jsonObject;
     private JSONArray jsonArray;
+    private TokenSupplier<Token> supplier;
 
     @Before
     public void setUp() throws Exception {
@@ -26,19 +28,21 @@ public class PickerTest {
         jsonArray = new JSONArray(jsonArrayStr);
         assertEquals(jsonObjectStr, jsonObject.toString());
         assertEquals(jsonArrayStr, jsonArray.toString());
+        supplier = (Token::new);
     }
 
     @After
     public void tearDown() throws Exception {
         jsonObject = null;
         jsonArray = null;
+        supplier = null;
     }
 
     @Test
     public void getInstance() throws Exception {
         // case 1
         try {
-            new Picker<>(jsonArray);
+            new Picker<>(jsonArray, supplier);
             assertTrue(true);
         } catch (InsertObjectTypeException e) {
             fail();
@@ -46,7 +50,7 @@ public class PickerTest {
 
         // case 2
         try {
-            new Picker<>(jsonObject);
+            new Picker<>(jsonObject, supplier);
             assertTrue(true);
         } catch (InsertObjectTypeException e) {
             fail();
@@ -54,7 +58,7 @@ public class PickerTest {
 
         // case 3
         try {
-            new Picker<>("String: error object");
+            new Picker<>("String: error object", supplier);
             fail();
         } catch (InsertObjectTypeException e) {
             assertTrue(true);
@@ -73,16 +77,16 @@ public class PickerTest {
 
     @Test
     public void equalsAndClone() throws Exception {
-        Picker<?> picker11 = new Picker<>(jsonArray);
+        Picker<Token> picker11 = new Picker<>(jsonArray, supplier);
         picker11.setOverwriteInterface(String::contains);
 
         // case 1
-        Picker<?> picker12 = picker11;
+        Picker<Token> picker12 = picker11;
         picker12.setOverwriteInterface(String::equals);
         assertEquals(true, picker11.equals(picker12));
 
         // case 2
-        Picker<?> picker21 = picker11.clone();
+        Picker<Token> picker21 = picker11.clone();
         picker12.setOverwriteInterface(String::endsWith);
         assertEquals(false, picker11.equals(picker21));
     }
@@ -104,11 +108,11 @@ public class PickerTest {
 
     @Test
     public void getAllValueList() throws Exception {
-        Picker<?> picker;
+        Picker<Token> picker;
         List<Token> list;
 
         // case 1
-        picker = new Picker<>(jsonArray);
+        picker = new Picker<>(jsonArray, supplier);
         list = picker.getAllValueList();
 
         assertEquals(13, list.size());
@@ -137,11 +141,11 @@ public class PickerTest {
 
     @Test
     public void getAllValueHashList() throws Exception {
-        Picker<?> picker;
+        Picker<Token> picker;
         List<Token> list;
 
         // case 1
-        picker = new Picker<>(jsonArray);
+        picker = new Picker<>(jsonArray, supplier);
         list = picker.getAllValueHashList();
 
         assertEquals(12, list.size());
@@ -175,23 +179,23 @@ public class PickerTest {
 
     @Test
     public void getValues() throws Exception {
-        Picker<?> picker;
+        Picker<Token> picker;
         List<Token> list;
 
         // case 1-1
-        picker = new Picker<>(jsonArray);
+        picker = new Picker<>(jsonArray, supplier);
         list = picker.getValues("license");
         assertEquals(1, list.size());
         assertEquals("[\"AAA\",\"TOEIC(750)\"]", list.get(0).getString());
         assertEquals(Type.VALUE_JSON_ARRAY, list.get(0).getType());
 
         // case 1-2
-        picker = new Picker<>(jsonArray);
+        picker = new Picker<>(jsonArray, supplier);
         list = picker.getValues("nothingKeyWord");
         assertEquals(true, list.isEmpty());
 
         // case 2-1
-        picker = new Picker<>(jsonArray);
+        picker = new Picker<>(jsonArray, supplier);
         List<String> array = new ArrayList<>();
         array.add("name");
         array.add("first");
@@ -201,14 +205,14 @@ public class PickerTest {
         assertEquals(Type.VALUE_STRING, list.get(0).getType());
 
         // case 2-2
-        picker = new Picker<>(jsonArray);
+        picker = new Picker<>(jsonArray, supplier);
         list = picker.getValues("name", "first");
         assertEquals(1, list.size());
         assertEquals("ichiro", list.get(0).getString());
         assertEquals(Type.VALUE_STRING, list.get(0).getType());
 
         // case 3
-        picker = new Picker<>(jsonArray);
+        picker = new Picker<>(jsonArray, supplier);
         picker.setOverwriteInterface(String::contains);
         list = picker.getValues("eight");
         assertEquals(2, list.size());
@@ -216,12 +220,12 @@ public class PickerTest {
         assertEquals(true, 1 == list.stream().filter(token -> token.getString().equals("178")).count());
 
         // case 4
-        picker = new Picker<>(jsonArray);
+        picker = new Picker<>(jsonArray, supplier);
         list = picker.getValues("first", "name");
         assertEquals(0, list.size());
 
         // case 5
-        picker = new Picker<>(jsonArray);
+        picker = new Picker<>(jsonArray, supplier);
         picker.setOverwriteInterface(String::contains);
         list = picker.getValues("e", "st");
         assertEquals(2, list.size());

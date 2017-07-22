@@ -26,6 +26,7 @@ package com.mickey305.common.v2.json.io;
 import com.mickey305.common.v2.exception.InsertObjectTypeException;
 import com.mickey305.common.v2.exception.JSONSyntaxException;
 import com.mickey305.common.v2.exception.JSONTokenTypeException;
+import com.mickey305.common.v2.json.model.TokenSupplier;
 import com.mickey305.common.v2.json.model.TokenUtil;
 import com.mickey305.common.v2.json.model.Type;
 import com.mickey305.common.v2.json.model.Token;
@@ -34,23 +35,27 @@ import com.mickey305.common.v2.util.CollectibleIterator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
-public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
+public class Tokenizer<T extends Token> implements CollectibleIterator<T>, Cloneable {
     public static final String TAG = Tokenizer.class.getName();
     public static final int TOKEN_DEPTH_INIT = 0;
 
     private ScannerLine line;
-    private Token prevToken;
+    private T prevToken;
     private int index;
     private Stack<Boolean> innerJSONArrayStack;
     private IterationCallback iterationCallback;
+    private TokenSupplier<T> supplier;
 
-    public Tokenizer(T t) throws InsertObjectTypeException {
+    public Tokenizer(Object t, @NotNull TokenSupplier<T> supplier) throws InsertObjectTypeException {
         this.initialize(t);
+        this.supplier = supplier;
     }
 
     /**
@@ -58,7 +63,7 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
      * @param t
      * @throws InsertObjectTypeException
      */
-    private void initialize(T t) throws InsertObjectTypeException {
+    private void initialize(Object t) throws InsertObjectTypeException {
         // insert object type check
         IterationUtil.checkObjectType(t);
 
@@ -75,16 +80,18 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public Tokenizer clone() {
-        Tokenizer scope = null;
+    public Tokenizer<T> clone() {
+        Tokenizer<T> scope = null;
         try {
             scope = (Tokenizer) super.clone();
             if(line != null) scope.line = this.line.clone();
-            if(prevToken != null) scope.prevToken = this.prevToken.clone();
+            if(prevToken != null) scope.prevToken = (T) this.prevToken.clone();
             if(innerJSONArrayStack != null) {
                 scope.innerJSONArrayStack = new Stack<>();
                 scope.innerJSONArrayStack.addAll(this.innerJSONArrayStack);
             }
+            if(iterationCallback != null) scope.iterationCallback = this.iterationCallback;
+            if(supplier != null) scope.supplier = this.supplier;
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -107,7 +114,7 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
      * @return
      */
     @Override
-    public Token next() {
+    public T next() {
         try {
             return this.nextToken();
         } catch (JSONSyntaxException e) {
@@ -120,28 +127,28 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
         return null;
     }
 
-    private Token nextToken() throws JSONSyntaxException, JSONTokenTypeException {
+    private T nextToken() throws JSONSyntaxException, JSONTokenTypeException {
         cutCode(line);
 
-        Token token = null;
+        T tok = null;
         int index = line.getIndex();
         char ch = line.peek();
 
         if(Character.isDigit(ch) || TokenUtil.isOperator(ch)) {
             // Figure
-            token = this.createFigureToken();
+            tok = this.createFigureToken();
         } else if(Character.isLetter(ch)) {
             // Letter: JSONNullValue or JSONBooleanValue
-            token = this.createEspecialToken();
+            tok = this.createEspecialToken();
         } else {
             // Other: Symbol, JSONField or JSONStringValue
             this.chgInnerJSONArrayStack();
             if (TokenUtil.isSymbol(ch)) {
                 // JSON symbol
-                token = new Token(line.next());
+                tok = this.createSymbolToken();
             } else if(ch == TokenUtil.CH_DOUBLE_QUOTES) {
                 // JSONField or JSONStringValue
-                token = this.createStandardValueToken();
+                tok = this.createStandardValueToken();
             } else {
                 // error
                 if (TokenUtil.isEndSymbol(prevToken) && prevToken.getDepth() == TOKEN_DEPTH_INIT)
@@ -151,23 +158,23 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
             }
         }
 
-        assert token != null;
-        token.setIndexNumber(index);
-        chgDepth(prevToken, token);
+        assert tok != null;
+        tok.setIndexNumber(index);
+        chgDepth(prevToken, tok);
 
         // copy JSONToken
-        prevToken = token;
+        prevToken = tok;
 
         this.index++;
 
-        return (token);
+        return (tok);
     }
 
     /**
      *
      * @return
      */
-    public Token now() {
+    public T now() {
         if(this.prevToken == null)
             throw new NullPointerException("Previous Token Null: please do the next position");
 
@@ -178,8 +185,8 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
      *
      * @return
      */
-    public Token peek() {
-        Tokenizer tokenizer = this.clone();
+    public T peek() {
+        Tokenizer<T> tokenizer = this.clone();
         return tokenizer.next();
     }
 
@@ -200,10 +207,24 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
 
     /**
      *
+     * @param value
+     * @return
+     * @throws JSONTokenTypeException
+     */
+    private T createRegisteredToken(String value) throws JSONTokenTypeException {
+        Map<String, Type> map = TokenUtil.getTokenMap();
+        if (!map.containsKey(value))
+            throw new JSONTokenTypeException("JSONToken type error");
+        Type type = map.get(value);
+        return supplier.get(type, value);
+    }
+
+    /**
+     *
      * @return
      */
-    private Token createFigureToken() {
-        Token token;
+    private T createFigureToken() {
+        T tok;
         String param = "";
         char ch = line.peek();
         while (line.hasNext() && (Character.isDigit(ch) || TokenUtil.isFigureParts(ch))) {
@@ -213,13 +234,13 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
         String expL = String.valueOf(TokenUtil.CH_EXP);
         String expU = String.valueOf(Character.toUpperCase(TokenUtil.CH_EXP));
         if(param.contains(expL) || param.contains(expU)) {
-            token = new Token(Type.VALUE_NUMBER_DCML, param);
+            tok = supplier.get(Type.VALUE_NUMBER_DCML, param);
         } else {
-            token = (param.contains(String.valueOf(TokenUtil.CH_DOT))) ?
-                    new Token(Float.parseFloat(param)) :
-                    new Token(Integer.parseInt(param));
+            tok = ((param.contains(String.valueOf(TokenUtil.CH_DOT)))
+                    ? supplier.get(Type.VALUE_NUMBER_F, param)
+                    : supplier.get(Type.VALUE_NUMBER_I, param));
         }
-        return token;
+        return tok;
     }
 
     /**
@@ -227,21 +248,31 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
      * @return
      * @throws JSONTokenTypeException
      */
-    private Token createEspecialToken() throws JSONTokenTypeException {
+    private T createSymbolToken() throws JSONTokenTypeException {
+        String str = String.valueOf(line.next());
+        return this.createRegisteredToken(str);
+    }
+
+    /**
+     *
+     * @return
+     * @throws JSONTokenTypeException
+     */
+    private T createEspecialToken() throws JSONTokenTypeException {
         String str = "";
         char ch = line.peek();
         while (line.hasNext() && Character.isLetter(ch)) {
             str += line.next();
             ch = line.peek();
         }
-        return new Token(str);
+        return this.createRegisteredToken(str);
     }
 
     /**
      *
      * @return
      */
-    private Token createStandardValueToken() throws JSONSyntaxException {
+    private T createStandardValueToken() throws JSONSyntaxException {
         Type type;
         Type prevType = prevToken.getType();
         if(!innerJSONArrayStack.peek()) {
@@ -269,7 +300,7 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
             ch = line.peek();
         }
         line.next(); // skip dq
-        return new Token(type, param);
+        return supplier.get(type, param);
     }
 
     /**

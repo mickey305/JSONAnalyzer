@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 K.Misaki
+ * Copyright (c) 2016 - 2017 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,8 @@ package com.mickey305.common.v2.json.io;
 
 import com.mickey305.common.v2.exception.InsertObjectTypeException;
 import com.mickey305.common.v2.json.model.Token;
+import com.mickey305.common.v2.json.model.TokenSupplier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -39,37 +41,45 @@ public class TokenListBuilder {
      *
      * @param json {@link org.json.JSONObject} or {@link org.json.JSONArray}
      * @param output
+     * @param supplier
+     * @param <T>
      * @return
+     * @throws InsertObjectTypeException
      */
-    public static <T> List<Token> build(T json, List<Token> output) throws InsertObjectTypeException {
+    public static <T extends Token> List<T> build(
+            Object json, List<T> output, @NotNull TokenSupplier<T> supplier) throws InsertObjectTypeException {
         output.clear();
-        Tokenizer<T> tokenizer = new Tokenizer<>(json);
+        Tokenizer<T> tokenizer = new Tokenizer<>(json, supplier);
         tokenizer.each(output::add);
         return output;
     }
 
     /**
      *
-     * @param json
+     * @param json {@link org.json.JSONObject} or {@link org.json.JSONArray}
+     * @param supplier
      * @param <T>
      * @return
      * @throws InsertObjectTypeException
      */
-    public static <T> ArrayList<Token> buildArrayList(T json) throws InsertObjectTypeException {
-        ArrayList<Token> list = new ArrayList<>();
-        return (ArrayList<Token>) build(json, list);
+    public static <T extends Token> ArrayList<T> buildArrayList(
+            Object json, TokenSupplier<T> supplier) throws InsertObjectTypeException {
+        ArrayList<T> list = new ArrayList<>();
+        return (ArrayList<T>) build(json, list, supplier);
     }
 
     /**
      *
-     * @param json
+     * @param json {@link org.json.JSONObject} or {@link org.json.JSONArray}
+     * @param supplier
      * @param <T>
      * @return
      * @throws InsertObjectTypeException
      */
-    public static <T> LinkedList<Token> buildLinkedList(T json) throws InsertObjectTypeException {
-        LinkedList<Token> list = new LinkedList<>();
-        return (LinkedList<Token>) build(json, list);
+    public static <T extends Token> LinkedList<T> buildLinkedList(
+            Object json, TokenSupplier<T> supplier) throws InsertObjectTypeException {
+        LinkedList<T> list = new LinkedList<>();
+        return (LinkedList<T>) build(json, list, supplier);
     }
 
 }

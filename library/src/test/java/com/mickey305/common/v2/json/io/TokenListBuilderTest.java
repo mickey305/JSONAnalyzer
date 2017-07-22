@@ -1,6 +1,7 @@
 package com.mickey305.common.v2.json.io;
 
 import com.mickey305.common.v2.exception.InsertObjectTypeException;
+import com.mickey305.common.v2.json.model.TokenSupplier;
 import com.mickey305.common.v2.json.model.Type;
 import com.mickey305.common.v2.json.model.Token;
 import org.json.JSONArray;
@@ -17,6 +18,7 @@ import static org.junit.Assert.*;
 public class TokenListBuilderTest {
     private JSONObject jsonObject;
     private JSONArray jsonArray;
+    private TokenSupplier<Token> supplier;
 
     @Before
     public void setUp() throws Exception {
@@ -26,12 +28,14 @@ public class TokenListBuilderTest {
         jsonArray = new JSONArray(jsonArrayStr);
         assertEquals(jsonObjectStr, jsonObject.toString());
         assertEquals(jsonArrayStr, jsonArray.toString());
+        supplier = (Token::new);
     }
 
     @After
     public void tearDown() throws Exception {
         jsonObject = null;
         jsonArray = null;
+        supplier = null;
     }
 
     @Test
@@ -40,7 +44,7 @@ public class TokenListBuilderTest {
 
         // case 1
         try {
-            TokenListBuilder.build(jsonObject, list);
+            TokenListBuilder.build(jsonObject, list, supplier);
             assertTrue(true);
         } catch (InsertObjectTypeException e) {
             fail();
@@ -48,7 +52,7 @@ public class TokenListBuilderTest {
 
         // case 2
         try {
-            TokenListBuilder.build(jsonArray, list);
+            TokenListBuilder.build(jsonArray, list, supplier);
             assertTrue(true);
         } catch (InsertObjectTypeException e) {
             fail();
@@ -56,7 +60,7 @@ public class TokenListBuilderTest {
 
         // case 3
         try {
-            TokenListBuilder.build("Error Text", list);
+            TokenListBuilder.build("Error Text", list, supplier);
             fail();
         } catch (InsertObjectTypeException e) {
             assertTrue(true);
@@ -68,7 +72,7 @@ public class TokenListBuilderTest {
         List<Token> list = new ArrayList<>();
 
         // case 1
-        TokenListBuilder.build(jsonObject, list);
+        TokenListBuilder.build(jsonObject, list, supplier);
 
         assertEquals(9, list.size());
 

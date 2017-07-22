@@ -40,38 +40,39 @@ public class Token implements Cloneable {
     private int indexNumber;
     private int depth;
 
-    public Token(char ch) throws JSONTokenTypeException {
-        this(String.valueOf(ch));
-    }
+//    public Token(char ch) throws JSONTokenTypeException {
+//        this(String.valueOf(ch));
+//    }
+//
+//    /**
+//     *
+//     * @param num
+//     */
+//    public Token(int num) {
+//        this(Type.VALUE_NUMBER_I, String.valueOf(num));
+//    }
+//
+//    public Token(boolean bool) {
+//        this((bool)? Type.VALUE_TRUE : Type.VALUE_FALSE, String.valueOf(bool));
+//    }
+//
+//    /**
+//     *
+//     * @param num
+//     */
+//    public Token(float num) {
+//        this(Type.VALUE_NUMBER_F, String.valueOf(num));
+//    }
+//
+//    public Token(String str) throws JSONTokenTypeException {
+//        Map<String, Type> map = TokenUtil.getTokenMap();
+//        if (!map.containsKey(str))
+//            throw new JSONTokenTypeException("JSONToken type error");
+//        Type type = map.get(str);
+//        setType(type);
+//        setString(str);
+//    }
 
-    /**
-     *
-     * @param num
-     */
-    public Token(int num) {
-        this(Type.VALUE_NUMBER_I, String.valueOf(num));
-    }
-
-    public Token(boolean bool) {
-        this((bool)? Type.VALUE_TRUE : Type.VALUE_FALSE, String.valueOf(bool));
-    }
-
-    /**
-     *
-     * @param num
-     */
-    public Token(float num) {
-        this(Type.VALUE_NUMBER_F, String.valueOf(num));
-    }
-
-    public Token(String str) throws JSONTokenTypeException {
-        Map<String, Type> map = TokenUtil.getTokenMap();
-        if (!map.containsKey(str))
-            throw new JSONTokenTypeException("JSONToken type error");
-        Type type = map.get(str);
-        setType(type);
-        setString(str);
-    }
     /**
      *
      * @param type

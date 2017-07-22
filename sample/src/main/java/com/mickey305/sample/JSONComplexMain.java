@@ -86,9 +86,9 @@ public class JSONComplexMain {
         JSONArray ary = new JSONArray(complexJson);
         Log.i("Entry foods: ");
         ary.forEach(json -> Log.i("\t+ " + ((JSONObject) json).get("name").toString()));
-        Picker<?> picker = new Picker<>(ary);
-        List<Token> toppings = picker.getValues("topping");
-        final Optional<Token> mostTopping = toppings.stream().max((o1, o2) -> {
+        Picker<ChildToken> picker = new Picker<>(ary, ChildToken::new);
+        List<ChildToken> toppings = picker.getValues("topping");
+        final Optional<ChildToken> mostTopping = toppings.stream().max((o1, o2) -> {
             JSONArray ary1 = (JSONArray) o1.getObject();
             JSONArray ary2 = (JSONArray) o2.getObject();
             return ary1.length() - ary2.length();
