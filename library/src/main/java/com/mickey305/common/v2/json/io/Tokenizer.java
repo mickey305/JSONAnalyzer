@@ -139,7 +139,7 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
             if (TokenUtil.isSymbol(ch)) {
                 // JSON symbol
                 token = new Token(line.next());
-            } else if(ch == TokenUtil.CHAR_DOUBLE_QUOTES) {
+            } else if(ch == TokenUtil.CH_DOUBLE_QUOTES) {
                 // JSONField or JSONStringValue
                 token = this.createStandardValueToken();
             } else {
@@ -210,7 +210,7 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
             param += line.next();
             ch = line.peek();
         }
-        token = (param.contains(String.valueOf(TokenUtil.CHAR_DOT)))?
+        token = (param.contains(String.valueOf(TokenUtil.CH_DOT)))?
                 new Token(Float.parseFloat(param)):
                 new Token(Integer.parseInt(param));
         return token;
@@ -255,7 +255,7 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
         String param = "";
         line.next();
         char ch = line.peek();
-        while (line.hasNext() && ch != TokenUtil.CHAR_DOUBLE_QUOTES) {
+        while (line.hasNext() && ch != TokenUtil.CH_DOUBLE_QUOTES) {
             param += line.next();
             ch = line.peek();
         }
@@ -269,14 +269,14 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
     private void chgInnerJSONArrayStack() {
         char ch = line.peek();
         switch (ch) {
-            case TokenUtil.CHAR_START_OBJECT:
+            case TokenUtil.CH_START_OBJECT:
                 innerJSONArrayStack.push(false);
                 break;
-            case TokenUtil.CHAR_START_ARRAY:
+            case TokenUtil.CH_START_ARRAY:
                 innerJSONArrayStack.push(true);
                 break;
-            case TokenUtil.CHAR_END_OBJECT:
-            case TokenUtil.CHAR_END_ARRAY:
+            case TokenUtil.CH_END_OBJECT:
+            case TokenUtil.CH_END_ARRAY:
                 innerJSONArrayStack.pop();
                 break;
             default:
@@ -309,8 +309,8 @@ public class Tokenizer<T> implements CollectibleIterator<Token>, Cloneable {
         do {
             hasCodeList.clear();
             hasCodeList.add(line.cutWhitespace());
-            hasCodeList.add(line.cutCharacter(TokenUtil.CHAR_COLON));
-            hasCodeList.add(line.cutCharacter(TokenUtil.CHAR_COMMA));
+            hasCodeList.add(line.cutCharacter(TokenUtil.CH_COLON));
+            hasCodeList.add(line.cutCharacter(TokenUtil.CH_COMMA));
         } while (hasCodeList.contains(true));
     }
 

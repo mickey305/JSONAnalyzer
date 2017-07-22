@@ -33,31 +33,31 @@ import java.util.Map;
 public class TokenUtil {
     public static final String TAG = TokenUtil.class.getName();
 
-    public static final char CHAR_DOT   = 46; // .
-    public static final char CHAR_PLUS  = 43; // +
-    public static final char CHAR_MINUS = 45; // -
+    public static final char CH_DOT = '.';
+    public static final char CH_PLUS = '+';
+    public static final char CH_MINUS = '-';
 
-    public static final char CHAR_COMMA = 44; // ,
-    public static final char CHAR_COLON = 58; // :
+    public static final char CH_COMMA = ',';
+    public static final char CH_COLON = ':';
 
-    public static final char CHAR_START_ARRAY   = 91;  // [
-    public static final char CHAR_END_ARRAY     = 93;  // ]
-    public static final char CHAR_START_OBJECT  = 123; // {
-    public static final char CHAR_END_OBJECT    = 125; // }
-    public static final char CHAR_DOUBLE_QUOTES = 34;  // "
+    public static final char CH_START_ARRAY = '[';
+    public static final char CH_END_ARRAY = ']';
+    public static final char CH_START_OBJECT = '{';
+    public static final char CH_END_OBJECT = '}';
+    public static final char CH_DOUBLE_QUOTES = '"';
 
     public static final String STRING_NULL  = "null";
     public static final String STRING_TRUE  = "true";
     public static final String STRING_FALSE = "false";
 
     private static final Character[] figurePartsArray = {
-        CHAR_DOT, CHAR_PLUS, CHAR_MINUS
+            CH_DOT, CH_PLUS, CH_MINUS
     };
     private static final Character[] operatorArray = {
-        CHAR_PLUS, CHAR_MINUS
+            CH_PLUS, CH_MINUS
     };
     private static final Character[] symbolArray = {
-        CHAR_START_ARRAY, CHAR_START_OBJECT, CHAR_END_ARRAY, CHAR_END_OBJECT
+            CH_START_ARRAY, CH_START_OBJECT, CH_END_ARRAY, CH_END_OBJECT
     };
 
     private static final List<Character> figurePartsList = Arrays.asList(figurePartsArray);
@@ -68,10 +68,10 @@ public class TokenUtil {
 
     public static Map<String, Type> getTokenMap() {
         Map<String, Type> map = new HashMap<>();
-        map.put(String.valueOf(CHAR_END_ARRAY), Type.END_ARRAY);
-        map.put(String.valueOf(CHAR_END_OBJECT), Type.END_OBJECT);
-        map.put(String.valueOf(CHAR_START_ARRAY), Type.START_ARRAY);
-        map.put(String.valueOf(CHAR_START_OBJECT), Type.START_OBJECT);
+        map.put(String.valueOf(CH_END_ARRAY), Type.END_ARRAY);
+        map.put(String.valueOf(CH_END_OBJECT), Type.END_OBJECT);
+        map.put(String.valueOf(CH_START_ARRAY), Type.START_ARRAY);
+        map.put(String.valueOf(CH_START_OBJECT), Type.START_OBJECT);
         map.put(STRING_FALSE, Type.VALUE_FALSE);
         map.put(STRING_TRUE, Type.VALUE_TRUE);
         map.put(STRING_NULL, Type.VALUE_NULL);
@@ -125,22 +125,22 @@ public class TokenUtil {
 
     @Contract(pure = true)
     public static boolean isObjectSymbol(char ch) {
-        return ch == CHAR_START_OBJECT || ch == CHAR_END_OBJECT;
+        return ch == CH_START_OBJECT || ch == CH_END_OBJECT;
     }
 
     @Contract(pure = true)
     public static boolean isArraySymbol(char ch) {
-        return ch == CHAR_START_ARRAY || ch == CHAR_END_ARRAY;
+        return ch == CH_START_ARRAY || ch == CH_END_ARRAY;
     }
 
     @Contract(pure = true)
     public static boolean isStartSymbol(char ch) {
-        return ch == CHAR_START_ARRAY || ch == CHAR_START_OBJECT;
+        return ch == CH_START_ARRAY || ch == CH_START_OBJECT;
     }
 
     @Contract(pure = true)
     public static boolean isEndSymbol(char ch) {
-        return ch == CHAR_END_ARRAY || ch == CHAR_END_OBJECT;
+        return ch == CH_END_ARRAY || ch == CH_END_OBJECT;
     }
 
     @Contract(pure = true)

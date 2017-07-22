@@ -461,18 +461,18 @@ public class Picker<T> implements Cloneable {
 
             // create token-string and added double quotes
             if(currentToken.getType() == Type.VALUE_STRING || currentToken.getType() == Type.FIELD_NAME)
-                value += TokenUtil.CHAR_DOUBLE_QUOTES + currentToken.getString() + TokenUtil.CHAR_DOUBLE_QUOTES;
+                value += TokenUtil.CH_DOUBLE_QUOTES + currentToken.getString() + TokenUtil.CH_DOUBLE_QUOTES;
             else
                 value += currentToken.getString();
 
             // added colon
             if(currentToken.getType() == Type.FIELD_NAME)
-                value += TokenUtil.CHAR_COLON;
+                value += TokenUtil.CH_COLON;
 
             // added comma
             if(currentToken.getType().isValue() || TokenUtil.isEndSymbol(currentToken)) {
                 if(!TokenUtil.isEndSymbol(nextToken) && !isEnd)
-                    value += TokenUtil.CHAR_COMMA;
+                    value += TokenUtil.CH_COMMA;
             }
 
             if(isEnd) break;
