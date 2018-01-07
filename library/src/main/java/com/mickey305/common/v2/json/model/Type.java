@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 - 2017 K.Misaki
+ * Copyright (c) 2016 - 2018 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  */
 package com.mickey305.common.v2.json.model;
 
-public enum Type {
+public enum Type implements TypeTree {
     START_ARRAY         ( 0, true,  false),    // [
     END_ARRAY           ( 1, true,  false),    // ]
     START_OBJECT        ( 2, true,  false),    // {
@@ -43,14 +43,18 @@ public enum Type {
         this.code = code;
         this.symbol = symbol;
         this.value = value;
+        this.cmp = new TypeNode<>(this);
     }
 
     public int getCode() { return code; }
     public boolean isSymbol() { return symbol; }
     public boolean isValue() { return value; }
     public boolean isKey() { return !isSymbol() && !isValue(); }
+    public boolean is(Type type) { return this == type; }
+    @Override public TypeNode box() { return cmp; }
 
     private int code;
     private boolean symbol;
     private boolean value;
+    private TypeNode<Type> cmp;
 }
