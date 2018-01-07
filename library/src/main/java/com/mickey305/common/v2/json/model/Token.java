@@ -115,10 +115,18 @@ public class Token implements Cloneable {
     }
 
     /**
+     * change to {@link #type()}
+     * @return
+     */
+    @Deprecated public Type getType() {
+        return this.type();
+    }
+
+    /**
      *
      * @return
      */
-    public Type getType() {
+    public Type type() {
         return type;
     }
 
