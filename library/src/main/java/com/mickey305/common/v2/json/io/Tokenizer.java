@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 - 2017 K.Misaki
+ * Copyright (c) 2016 - 2018 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import com.mickey305.common.v2.json.model.TokenSupplier;
 import com.mickey305.common.v2.json.model.TokenUtil;
 import com.mickey305.common.v2.json.model.Type;
 import com.mickey305.common.v2.json.model.Token;
+import com.mickey305.common.v2.json.model.TypeTreeFactory;
 import com.mickey305.common.v2.string.ScannerLine;
 import com.mickey305.common.v2.util.CollectibleIterator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -41,6 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import static com.mickey305.common.v2.json.model.Group.VALUE;
 
 public class Tokenizer<T extends Token> implements CollectibleIterator<T>, Cloneable {
     public static final String TAG = Tokenizer.class.getName();
@@ -72,6 +75,8 @@ public class Tokenizer<T extends Token> implements CollectibleIterator<T>, Clone
         prevToken = null;
         index = 0;
         innerJSONArrayStack = new Stack<>();
+        // syntax tree build process
+        TypeTreeFactory.getInstance().build();
     }
 
     /**
@@ -277,7 +282,7 @@ public class Tokenizer<T extends Token> implements CollectibleIterator<T>, Clone
         Type prevType = prevToken.getType();
         if(!innerJSONArrayStack.peek()) {
             // Index: in JSONObject
-            if(prevType == Type.END_ARRAY || TokenUtil.isObjectSymbol(prevToken) || prevType.isValue())
+            if(prevType == Type.END_ARRAY || TokenUtil.isObjectSymbol(prevToken) || prevType.belongsTo(VALUE))
                 type = Type.FIELD_NAME;
             else if(prevType == Type.FIELD_NAME)
                 type = Type.VALUE_STRING;

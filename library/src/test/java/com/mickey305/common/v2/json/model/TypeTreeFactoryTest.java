@@ -403,7 +403,7 @@ public class TypeTreeFactoryTest {
         Assert.assertEquals(allSet.size() * 4, testArguments.size());
 
         testArguments.forEach(pair -> {
-            Log.i(ToStringBuilder.reflectionToString(pair));
+//            Log.i(ToStringBuilder.reflectionToString(pair));
             final List<TypeTree> whiteList = pair.getLeft();
             final Function<TypeTree, Boolean> testLogic = pair.getRight();
             whiteList.forEach(elm -> Assert.assertTrue(testLogic.apply(elm)));

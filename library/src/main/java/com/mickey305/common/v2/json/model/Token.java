@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 - 2017 K.Misaki
+ * Copyright (c) 2016 - 2018 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,11 @@
  */
 package com.mickey305.common.v2.json.model;
 
-import com.mickey305.common.v2.exception.JSONTokenTypeException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.Map;
 
 public class Token implements Cloneable {
     public static final String TAG = Token.class.getName();
@@ -39,39 +36,6 @@ public class Token implements Cloneable {
     private Type type;
     private int indexNumber;
     private int depth;
-
-//    public Token(char ch) throws JSONTokenTypeException {
-//        this(String.valueOf(ch));
-//    }
-//
-//    /**
-//     *
-//     * @param num
-//     */
-//    public Token(int num) {
-//        this(Type.VALUE_NUMBER_I, String.valueOf(num));
-//    }
-//
-//    public Token(boolean bool) {
-//        this((bool)? Type.VALUE_TRUE : Type.VALUE_FALSE, String.valueOf(bool));
-//    }
-//
-//    /**
-//     *
-//     * @param num
-//     */
-//    public Token(float num) {
-//        this(Type.VALUE_NUMBER_F, String.valueOf(num));
-//    }
-//
-//    public Token(String str) throws JSONTokenTypeException {
-//        Map<String, Type> map = TokenUtil.getTokenMap();
-//        if (!map.containsKey(str))
-//            throw new JSONTokenTypeException("JSONToken type error");
-//        Type type = map.get(str);
-//        setType(type);
-//        setString(str);
-//    }
 
     /**
      *

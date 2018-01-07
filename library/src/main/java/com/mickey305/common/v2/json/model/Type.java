@@ -24,37 +24,30 @@
 package com.mickey305.common.v2.json.model;
 
 public enum Type implements TypeTree {
-    START_ARRAY         ( 0, true,  false),    // [
-    END_ARRAY           ( 1, true,  false),    // ]
-    START_OBJECT        ( 2, true,  false),    // {
-    END_OBJECT          ( 3, true,  false),    // }
-    FIELD_NAME          ( 4, false, false),    // json key
-    VALUE_STRING        ( 5, false, true ),    // json value
-    VALUE_NULL          ( 6, false, true ),    // json value
-    VALUE_NUMBER_F      ( 7, false, true ),    // json value
-    VALUE_NUMBER_I      ( 8, false, true ),    // json value
-    VALUE_NUMBER_DCML   (13, false, true ),    // json value
-    VALUE_TRUE          ( 9, false, true ),    // json value
-    VALUE_FALSE         (10, false, true ),    // json value
-    VALUE_JSON_OBJECT   (11, false, true ),    // json value
-    VALUE_JSON_ARRAY    (12, false, true );    // json value
+    START_ARRAY         ( 0),    // [
+    END_ARRAY           ( 1),    // ]
+    START_OBJECT        ( 2),    // {
+    END_OBJECT          ( 3),    // }
+    FIELD_NAME          ( 4),    // json key
+    VALUE_STRING        ( 5),    // json value
+    VALUE_NULL          ( 6),    // json value
+    VALUE_NUMBER_F      ( 7),    // json value
+    VALUE_NUMBER_I      ( 8),    // json value
+    VALUE_NUMBER_DCML   (13),    // json value
+    VALUE_TRUE          ( 9),    // json value
+    VALUE_FALSE         (10),    // json value
+    VALUE_JSON_OBJECT   (11),    // json value
+    VALUE_JSON_ARRAY    (12);    // json value
 
-    Type(int code, boolean symbol, boolean value) {
+    Type(int code) {
         this.code = code;
-        this.symbol = symbol;
-        this.value = value;
         this.cmp = new TypeNode<>(this);
     }
 
     public int getCode() { return code; }
-    public boolean isSymbol() { return symbol; }
-    public boolean isValue() { return value; }
-    public boolean isKey() { return !isSymbol() && !isValue(); }
     public boolean is(Type type) { return this == type; }
     @Override public TypeNode box() { return cmp; }
 
     private int code;
-    private boolean symbol;
-    private boolean value;
     private TypeNode<Type> cmp;
 }

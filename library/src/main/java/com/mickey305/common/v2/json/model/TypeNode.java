@@ -48,7 +48,7 @@ public class TypeNode<T extends TypeTree> extends Composite<T> {
     }
 
     public boolean add(TypeNode<T> child) {
-        if (child.getObject() instanceof Type) {
+        if (child.unbox() instanceof Type) {
             // child element: Type enum situation
             child.getParents().add(this);
             return super.getChildren().add(child);
@@ -57,7 +57,7 @@ public class TypeNode<T extends TypeTree> extends Composite<T> {
     }
 
     public Collection<Component<T>> getParents() {
-        return (this.getObject() instanceof Type)
+        return (this.unbox() instanceof Type)
                 ? this.parents
                 : Collections.singletonList(this.getParent());
     }
@@ -68,7 +68,7 @@ public class TypeNode<T extends TypeTree> extends Composite<T> {
 
     public boolean belongsTo(TypeNode<T> target) {
         Collection<Component<T>> parents = new HashSet<>(this.getParents());
-        if (this.getObject() instanceof Type) {
+        if (this.unbox() instanceof Type) {
             return parents.stream().anyMatch(parent ->
                     parent.getCallback().search(parent, target) || parent.belongsTo(target));
         }
@@ -87,10 +87,10 @@ public class TypeNode<T extends TypeTree> extends Composite<T> {
     @Deprecated @Override public boolean removeAll() { return false; }
 
     public boolean is(Group group) {
-        return this.getObject() instanceof Group && ((Group) this.getObject()).is(group);
+        return this.unbox() instanceof Group && ((Group) this.unbox()).is(group);
     }
 
     public boolean is(Type type) {
-        return this.getObject() instanceof Type && ((Type) this.getObject()).is(type);
+        return this.unbox() instanceof Type && ((Type) this.unbox()).is(type);
     }
 }

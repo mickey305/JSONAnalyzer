@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mickey305.common.v2.json.model.Group.VALUE;
 import static org.junit.Assert.*;
 
 public class PickerTest {
@@ -136,7 +137,7 @@ public class PickerTest {
         assertEquals(3, list.stream().filter(token -> token.getType() == Type.VALUE_NUMBER_I).count());
         assertEquals(1, list.stream().filter(token -> token.getType() == Type.VALUE_NUMBER_F).count());
 
-        assertEquals(true, list.size() == list.stream().filter(token -> token.getType().isValue()).count());
+        assertEquals(true, list.size() == list.stream().filter(token -> token.getType().belongsTo(VALUE)).count());
     }
 
     @Test
@@ -169,7 +170,7 @@ public class PickerTest {
         assertEquals(2, list.stream().filter(token -> token.getType() == Type.VALUE_NUMBER_I).count());
         assertEquals(1, list.stream().filter(token -> token.getType() == Type.VALUE_NUMBER_F).count());
 
-        assertEquals(true, list.size() == list.stream().filter(token -> token.getType().isValue()).count());
+        assertEquals(true, list.size() == list.stream().filter(token -> token.getType().belongsTo(VALUE)).count());
     }
 
     @Test

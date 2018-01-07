@@ -1,3 +1,3 @@
 #!/bin/sh
 
-./gradlew clean build uploadArchives
+./gradlew clean build --stacktrace --info

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017 K.Misaki
+ * Copyright (c) 2017 - 2018 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mickey305.common.v2.json.model.Group.KEY;
+import static com.mickey305.common.v2.json.model.Group.VALUE;
 
 public interface FinderManager<T extends Token> {
 
@@ -71,8 +74,8 @@ public interface FinderManager<T extends Token> {
                 match = instance.getOverwriteInterface().changeSearchLogic(compTok, target);
 
             if((point == AccessPoint.Key
-                    ? currentTok.getType().isKey()
-                    : currentTok.getType().isValue() || TokenUtil.isStartSymbol(currentTok)) && match) {
+                    ? currentTok.getType().belongsTo(KEY)
+                    : currentTok.getType().belongsTo(VALUE) || TokenUtil.isStartSymbol(currentTok)) && match) {
                 int offset = 1;
                 T offsetTok = currentTok;
                 while (i - offset >= 0) {

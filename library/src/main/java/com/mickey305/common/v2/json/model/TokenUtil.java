@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 - 2017 K.Misaki
+ * Copyright (c) 2016 - 2018 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.mickey305.common.v2.json.model.Group.ARRAY;
+import static com.mickey305.common.v2.json.model.Group.END;
+import static com.mickey305.common.v2.json.model.Group.OBJECT;
+import static com.mickey305.common.v2.json.model.Group.START;
+import static com.mickey305.common.v2.json.model.Group.TYPE_EMBEDDED;
 
 public class TokenUtil {
     public static final String TAG = TokenUtil.class.getName();
@@ -162,22 +168,22 @@ public class TokenUtil {
 
     @Contract(pure = true)
     public static boolean isObjectSymbol(Type type) {
-        return type == Type.START_OBJECT || type == Type.END_OBJECT;
+        return type.belongsTo(OBJECT);
     }
 
     @Contract(pure = true)
     public static boolean isArraySymbol(Type type) {
-        return type == Type.START_ARRAY || type == Type.END_ARRAY;
+        return type.belongsTo(ARRAY);
     }
 
     @Contract(pure = true)
     public static boolean isStartSymbol(Type type) {
-        return type == Type.START_ARRAY || type == Type.START_OBJECT;
+        return type.belongsTo(START);
     }
 
     @Contract(pure = true)
     public static boolean isEndSymbol(Type type) {
-        return type == Type.END_ARRAY || type == Type.END_OBJECT;
+        return type.belongsTo(END);
     }
 
     public static boolean isObjectSymbol(Token token) {
@@ -202,7 +208,7 @@ public class TokenUtil {
 
     @Contract(pure = true)
     public static boolean isTypeEmbeddedValue(Type type) {
-        return type == Type.VALUE_JSON_ARRAY || type == Type.VALUE_JSON_OBJECT;
+        return type.belongsTo(TYPE_EMBEDDED);
     }
 
 }

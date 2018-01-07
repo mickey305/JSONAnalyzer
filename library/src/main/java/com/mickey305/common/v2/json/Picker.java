@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 - 2017 K.Misaki
+ * Copyright (c) 2016 - 2018 K.Misaki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.mickey305.common.v2.json.ObjectTypeChecker.isJSONObjectOrJSONArray;
+import static com.mickey305.common.v2.json.model.Group.VALUE;
 
 /**
  * Picker is the Utility Class to search the JSONObject or JSONArray Information.
@@ -186,7 +187,7 @@ public class Picker<T extends Token> implements Cloneable {
 
         // add Value-List of Not-Contains JSONValue
         List<T> tmpValueList = this.tokenList.stream().filter(
-                token -> token.getType().isValue() && !valueList.contains(token)
+                token -> token.getType().belongsTo(VALUE) && !valueList.contains(token)
         ).collect(Collectors.toCollection(ArrayList::new));
         valueList.addAll(tmpValueList);
         List<T> tmpTokenList = new ArrayList<>(this.tokenList);
@@ -306,7 +307,7 @@ public class Picker<T extends Token> implements Cloneable {
             if(currentToken.getType() == Type.FIELD_NAME && match) {
                 currentToken = tokenList.get(i + 1);
 
-                if(currentToken.getType().isValue())
+                if(currentToken.getType().belongsTo(VALUE))
                     outList.add(currentToken);
                 else if(TokenUtil.isStartSymbol(currentToken))
                     outList.add(AnalyzeUtil.generateEmbeddedValue(tokenList, i + 1, supplier));
